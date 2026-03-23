@@ -6,7 +6,7 @@
 /*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 12:20:19 by kelemayi          #+#    #+#             */
-/*   Updated: 2026/03/23 13:43:04 by kel              ###   ########.fr       */
+/*   Updated: 2026/03/23 15:45:49 by kel              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 char	*ft_trimendl(char *str);
+int		ft_skip_whitespace(const char *str, int i);
 
 /*******************************************************************************
 *			Memory_manipulation_funtions:			       *
