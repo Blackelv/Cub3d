@@ -1,33 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cleaner2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/03 13:49:28 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 02:25:19 by kel              ###   ########.fr       */
+/*   Created: 2026/03/24 01:29:13 by kel               #+#    #+#             */
+/*   Updated: 2026/03/24 01:30:43 by kel              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-int	main(int ac, char *av[])
+void	simple_error_exit(const char *msg)
 {
-	t_cub	*cub;
+	ft_putstr_fd("Error\n", 1);
+	ft_putstr_fd((char *)msg, 2);
+	ft_putstr_fd("\n", 2);
+	get_next_line(-42);
+	exit (EXIT_FAILURE);
+}
 
-	if (ac != 2)
-		simple_error_exit(ERR_ARGS);
-	cub = ft_calloc(1, sizeof(t_cub));
-	if (!cub)
-		simple_error_exit(ERR_MALLOC);
-	if (parse_n_init_map(cub, av[1]))
+void	clean_mlx_ptrs(t_cub *cub)
+{
+	if (cub->mlx && cub->frame.img)
 	{
-		clean_cub3d(cub);
-		free(cub);
-		exit(EXIT_FAILURE);
+		mlx_destroy_image(cub->mlx, cub->frame.img);
+		cub->frame.img = NULL;
 	}
-	clean_cub3d(cub);
-	free(cub);
-	return (0);
+	if (cub->mlx && cub->win)
+	{
+		mlx_destroy_window(cub->mlx, cub->win);
+		cub->win = NULL;
+	}
 }

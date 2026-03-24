@@ -6,7 +6,7 @@
 #    By: kel <kel@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 10:52:26 by ffrattar          #+#    #+#              #
-#    Updated: 2026/03/17 00:46:07 by kel              ###   ########.fr        #
+#    Updated: 2026/03/24 13:09:53 by kel              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,11 @@ NAME := cub3D
 # Source Files (for archive file and main program)
 SRC_DIR = src
 
-SRCS =  src/main.c src/cleaner.c src/errors.c \
+SRCS = src/main.c src/parsing.c src/validate_config.c src/scene_parse.c \
+	src/scene_parse2.c src/map_parse.c src/map_parse2.c src/build_map.c \
+	src/validate_map.c src/validate_map2.c src/map_floodfill.c \
+	src/floodfill_helper.c src/cleaner.c src/cleaner2.c src/errors.c \
+	src/errors2.c src/init_mlx.c src/player_spawn.c \
 
 OFILES = $(SRCS:.c=.o)
 
