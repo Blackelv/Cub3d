@@ -6,7 +6,7 @@
 #    By: kel <kel@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 10:52:26 by ffrattar          #+#    #+#              #
-#    Updated: 2026/02/27 14:43:25 by kel              ###   ########.fr        #
+#    Updated: 2026/03/24 13:09:53 by kel              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,11 @@ NAME := cub3D
 # Source Files (for archive file and main program)
 SRC_DIR = src
 
-SRCS =  \
+SRCS = src/main.c src/parsing.c src/validate_config.c src/scene_parse.c \
+	src/scene_parse2.c src/map_parse.c src/map_parse2.c src/build_map.c \
+	src/validate_map.c src/validate_map2.c src/map_floodfill.c \
+	src/floodfill_helper.c src/cleaner.c src/cleaner2.c src/errors.c \
+	src/errors2.c src/init_mlx.c src/player_spawn.c \
 
 OFILES = $(SRCS:.c=.o)
 
@@ -41,10 +45,12 @@ LIBFT := $(LIBFT_PATH)/libft.a
 LIBMLX := $(MLX_PATH)/libmlx_Linux.a
 DOT_H_PATH := include/cub3D.h
 INC = -I./include
+LIBINC = -I./libft/includes
+MLXINC = -I./minilibx-linux
 
 # Compilation Config
 CC = cc
-CFLAGS = -Wall -Wextra -Werror $(INC)
+CFLAGS = -Wall -Wextra -Werror -Wno-strict-prototypes $(INC) $(LIBINC) $(MLXINC)
 DEBUGFLAGS = -g -ggdb -pedantic -g2
 # Minilibx configs
 MLX = -Lminilibx-linux $(LIBMLX) -lmlx -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -I/usr/include
@@ -61,7 +67,7 @@ $(NAME): $(LIBFT) $(LIBMLX) $(DOT_H_PATH) $(OFILES)
 
 # Build main program file using library
 	$(CC) $(CFLAGS) $(OFILES) $(LIBFT) $(MLX) -o $(NAME) 
-	echo "${GREEN} Created $(NAME) program ${RESET_COLOR}"
+	echo "${GREEN}Created $(NAME) program ${RESET_COLOR}"
 
 # Building_Libft_library
 $(LIBFT): FORCE
@@ -97,16 +103,22 @@ show:
 	@printf "OFILES     : $(OFILES)\n"
 # Clean Operations
 clean:
+	if [ -n "$$(find $(LIBFT_PATH)/libft -name '*.o')" ]; then \
+		make --no-print-directory -s -C $(LIBFT_PATH) clean; \
+	fi
 	if [ -n "$$(find $(SRC_DIR) -name '*.o')" ]; then \
-		echo "${GREY} Removed all .o files for ${NAME} ${RESET_COLOR} "; \
+		echo "${GREY}Removed all .o files for ${NAME} ${RESET_COLOR} "; \
 	fi
 	cd $(SRC_DIR)
 	rm -f $(OFILES)
 
 fclean: clean
+	if [ -e $(LIBFT) ]; then \
+		make --no-print-directory -s -C $(LIBFT_PATH) fclean; \
+	fi
 	if [ -e $(NAME) ]; then \
 		rm -f $(NAME); \
-		echo "${BOLD}${GREY} Removed $(NAME) ${RESET_COLOR}"; \
+		echo "${BOLD}${GREY}Removed $(NAME) ${RESET_COLOR}"; \
 		echo "${RESET_COLOR}"; \
 	fi
 re: fclean all
