@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 13:26:38 by kel              ###   ########.fr       */
+/*   Updated: 2026/05/07 09:56:34 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,18 @@
 
 # include "libft.h"
 # include "mlx.h"
-# include <stdbool.h>
 # include <fcntl.h>
+# include <stdbool.h>
 # include <unistd.h>
 
 # define MAP_CHARS "01NSEW "
 # define SPAWN_CHARS "NSEW"
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1200
+# define WIN_HEIGHT 900
+# define FOV 60
+# define BLOCK 64
+# define SPEED 3
+# define ROT 0.05
 
 # define ERR_ARGS "Invalid number of args"
 # define ERR_PARSE "Failed parsing args"
@@ -49,7 +53,7 @@
 # define ERR_WE_TEX "Missing West texture"
 # define ERR_EA_TEX "Missing East texture"
 # define ERR_RGB_R "RGB value out of range (0 - 255)"
-# define ERR_RGB_F "Invalid RGB format (3 sets of digits separated by ',')" 
+# define ERR_RGB_F "Invalid RGB format (3 sets of digits separated by ',')"
 # define ERR_RGB_M "Missing RGB value"
 # define ERR_INVAL_C "Invalid character in map"
 # define ERR_MULTI_SPAWN "Multiple spawn positions in map"
@@ -65,7 +69,7 @@
 # define GENERIC_ERR "Generic error"
 // # define ERR_FILE_IS_DIR "Is a directory"
 
-enum e_errors
+enum			e_errors
 {
 	OK = 0,
 	KO = 1,
@@ -107,7 +111,7 @@ enum e_errors
 	E_TEX_ADDR
 };
 
-enum e_scenestate
+enum			e_scenestate
 {
 	PRE_MAP,
 	IN_MAP,
@@ -122,67 +126,67 @@ typedef enum e_textid
 	EAST,
 	T_COUNT,
 	NONE = -1
-}	t_textid;
+}				t_textid;
 
 typedef struct s_flood
 {
-	char	**grid;
-	char	**vis;
-	int		*stack;
-	int		top;
-	int		h;
-	int		w;
-	int		i;
-	int		j;
-}	t_flood;
+	char		**grid;
+	char		**vis;
+	int			*stack;
+	int			top;
+	int			h;
+	int			w;
+	int			i;
+	int			j;
+}				t_flood;
 
 typedef struct s_map
 {
-	char	**grid;
-	char	**raw;
-	int		r_count;
-	int		r_cap;
-	int		width;
-	int		height;
-	int		spawn_x;
-	int		spawn_y;
-	int		spawn_count;
-	char	spawn_dir;
-	bool	parsed;
-	bool	has_space;
-	bool	is_closed;
-}	t_map;
+	char		**grid;
+	char		**raw;
+	int r_count; // parse
+	int r_cap;   // parse
+	int			width;
+	int			height;
+	int			spawn_x;
+	int			spawn_y;
+	int spawn_count; // parse
+	char		spawn_dir;
+	bool parsed;    // parse
+	bool has_space; // parse
+	bool is_closed; // parse
+}				t_map;
 
 typedef struct s_player
 {
-	double	x;
-	double	y;
-	double	dir_x;
-	double	dir_y;
-	double	plane_x;
-	double	plane_y;
-}	t_player;
+	double		x;
+	double		y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
+}				t_player;
 
 typedef struct s_img
 {
-	void	*img;
-	char	*addr;
-	int		w;
-	int		h;
-	int		bpp;
-	int		endian;
-	int		line_len;
-}	t_img;
+	void		*img;
+	char		*addr;
+	int			w;
+	int			h;
+	int			bpp;
+	int			endian;
+	int			line_len;
+}				t_img;
 
 typedef struct s_assets
 {
-	t_img	img[T_COUNT];
-	char	*path[T_COUNT];
-	int		floor;
-	int		ceiling;
-	bool	f_set;
-	bool	c_set;
-}	t_assets;
+	t_img		img[T_COUNT];
+	char		*path[T_COUNT];
+	int			floor;
+	int			ceiling;
+	bool		f_set;
+	bool		c_set;
+}				t_assets;
 
 typedef struct s_cub
 {
@@ -192,42 +196,42 @@ typedef struct s_cub
 	t_player	player;
 	t_img		frame;
 	t_assets	assets;
-}	t_cub;
+}				t_cub;
 
 //--------------------------------Main FUNCTIONS-------------------------------/
 
 //------------------------------Parsing FUNCTIONS------------------------------/
-int			parse_n_init_map(t_cub *cub, char *file);
-int			valid_scene(t_cub *cub, char *file);
-t_textid	match_type_identifier(char *s);
-bool		is_line_empty(char *line);
-bool		is_scene_description(char *line);
-bool		is_map_content(char *line);
-int			fill_scenery(t_cub *cub, char *line);
-int			store_map_line(t_cub *cub, const char *line);
-int			parse_rgb(const char *s, int *r, int *g, int *b);
-int			check_config_complete(t_cub *cub);
-int			build_map_grid(t_cub *cub);
-int			scan_validate_map(t_cub *cub);
-int			init_player_spawn(t_cub *cub);
-int			init_mlx(t_cub *cub);
-int			check_borders(t_cub *cub);
-char		**visited_arr(int h, int w);
-void		free_visited_arr(char **vis, int n);
-int			flood_borders(t_cub *cub, char **vis);
-int			floodfill_void(t_cub *cub, int r, int c, char **vis);
+int				parse_n_init_map(t_cub *cub, char *file);
+int				valid_scene(t_cub *cub, char *file);
+t_textid		match_type_identifier(char *s);
+bool			is_line_empty(char *line);
+bool			is_scene_description(char *line);
+bool			is_map_content(char *line);
+int				fill_scenery(t_cub *cub, char *line);
+int				store_map_line(t_cub *cub, const char *line);
+int				parse_rgb(const char *s, int *r, int *g, int *b);
+int				check_config_complete(t_cub *cub);
+int				build_map_grid(t_cub *cub);
+int				scan_validate_map(t_cub *cub);
+int				init_player_spawn(t_cub *cub);
+int				init_mlx(t_cub *cub);
+int				check_borders(t_cub *cub);
+char			**visited_arr(int h, int w);
+void			free_visited_arr(char **vis, int n);
+int				flood_borders(t_cub *cub, char **vis);
+int				floodfill_void(t_cub *cub, int r, int c, char **vis);
 
 //---------------------------------MLX FUNCTIONS-------------------------------/
-int			init_mlx(t_cub *cub);
+int				init_mlx(t_cub *cub);
 
 //-------------------------------Cleaner FUNCTIONS-----------------------------/
-void		simple_error_exit(const char *msg);
-void		clean_cub3d(t_cub *cub);
-void		clean_mlx_ptrs(t_cub *cub);
+void			simple_error_exit(const char *msg);
+void			clean_cub3d(t_cub *cub);
+void			clean_mlx_ptrs(t_cub *cub);
 
 //-------------------------------Errors FUNCTIONS------------------------------/
-const	char	*err_mapper(int code);
-int			err_msg(const char *details, int code);
-const	char	*parsing_errors(int code);
+const char		*err_mapper(int code);
+int				err_msg(const char *details, int code);
+const char		*parsing_errors(int code);
 
 #endif

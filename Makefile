@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kel <kel@student.42.fr>                    +#+  +:+       +#+         #
+#    By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 10:52:26 by ffrattar          #+#    #+#              #
-#    Updated: 2026/03/24 13:09:53 by kel              ###   ########.fr        #
+#    Updated: 2026/05/07 09:55:11 by ffrattar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,12 +41,14 @@ OFILES = $(SRCS:.c=.o)
 # Dependency path info
 LIBFT_PATH := ./libft
 MLX_PATH := ./minilibx-linux
+#MLX_PATH := ./minilibx
 LIBFT := $(LIBFT_PATH)/libft.a
 LIBMLX := $(MLX_PATH)/libmlx_Linux.a
 DOT_H_PATH := include/cub3D.h
 INC = -I./include
 LIBINC = -I./libft/includes
 MLXINC = -I./minilibx-linux
+#MLXINC = -I./minilibx
 
 # Compilation Config
 CC = cc
@@ -58,7 +60,7 @@ MLX = -Lminilibx-linux $(LIBMLX) -lmlx -L/usr/lib -Imlx_linux -lXext -lX11 -lm -
 MLX_URL := https://github.com/42Paris/minilibx-linux.git
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(DEBUGFLAGS)  $< -o $@ 
+	$(CC) -c $(CFLAGS) $(DEBUGFLAGS)  $< -o $@
 
 # Build Target
 all: $(NAME)
@@ -66,7 +68,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(LIBMLX) $(DOT_H_PATH) $(OFILES)
 
 # Build main program file using library
-	$(CC) $(CFLAGS) $(OFILES) $(LIBFT) $(MLX) -o $(NAME) 
+	$(CC) $(CFLAGS) $(OFILES) $(LIBFT) $(MLX) -o $(NAME)
 	echo "${GREEN}Created $(NAME) program ${RESET_COLOR}"
 
 # Building_Libft_library

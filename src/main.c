@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:49:28 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 02:25:19 by kel              ###   ########.fr       */
+/*   Updated: 2026/05/07 10:06:47 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	main(int ac, char *av[])
 		free(cub);
 		exit(EXIT_FAILURE);
 	}
+	// Start Render Loop
+	// clean up
 	clean_cub3d(cub);
 	free(cub);
 	return (0);
