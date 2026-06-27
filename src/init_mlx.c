@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init_mlx.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 02:18:02 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 02:22:04 by kel              ###   ########.fr       */
+/*   Updated: 2026/05/07 15:52:25 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-static	void	destroy_each_tex(t_cub *cub, t_textid idx)
+static void	destroy_each_tex(t_cub *cub, t_textid idx)
 {
 	if (cub->assets.img[idx].img)
 		mlx_destroy_image(cub->mlx, cub->assets.img[idx].img);
@@ -25,10 +25,10 @@ static	void	destroy_each_tex(t_cub *cub, t_textid idx)
 	cub->assets.img[idx].endian = 0;
 }
 
-static	int	init_each_texture(t_cub *cub, t_textid idx)
+static int	init_each_texture(t_cub *cub, t_textid idx)
 {
-	int		w;
-	int		h;
+	int	w;
+	int	h;
 
 	cub->assets.img[idx].img = mlx_xpm_file_to_image(cub->mlx,
 			cub->assets.path[idx], &w, &h);
@@ -49,7 +49,7 @@ static	int	init_each_texture(t_cub *cub, t_textid idx)
 	return (OK);
 }
 
-static	int	load_textures(t_cub *cub)
+static int	load_textures(t_cub *cub)
 {
 	int	i;
 	int	j;

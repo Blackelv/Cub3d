@@ -6,16 +6,18 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/05/07 09:56:34 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/06/27 16:39:11 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "/usr/include/X11/X.h" //needed to compile on my machine -ff
 # include "libft.h"
 # include "mlx.h"
 # include <fcntl.h>
+# include <math.h>
 # include <stdbool.h>
 # include <unistd.h>
 
@@ -25,8 +27,12 @@
 # define WIN_HEIGHT 900
 # define FOV 60
 # define BLOCK 64
-# define SPEED 3
+# define SPEED 1
 # define ROT 0.05
+# define MINI_SCALE 20
+# define MAP_RANGE 500
+
+# define PI 3.1415926535
 
 # define ERR_ARGS "Invalid number of args"
 # define ERR_PARSE "Failed parsing args"
@@ -155,7 +161,17 @@ typedef struct s_map
 	bool parsed;    // parse
 	bool has_space; // parse
 	bool is_closed; // parse
+	int map_range;  // view window of minimap
 }				t_map;
+
+typedef struct s_collision
+{
+	bool		N;
+	bool		S;
+	bool		E;
+	bool		W;
+
+}				t_collision;
 
 typedef struct s_player
 {
@@ -165,6 +181,8 @@ typedef struct s_player
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
+	double		angle;
+	t_collision	collision;
 }				t_player;
 
 typedef struct s_img
@@ -198,6 +216,12 @@ typedef struct s_cub
 	t_assets	assets;
 }				t_cub;
 
+typedef struct xy_point
+{
+	int			x;
+	int			y;
+}				t_xy_point;
+
 //--------------------------------Main FUNCTIONS-------------------------------/
 
 //------------------------------Parsing FUNCTIONS------------------------------/
@@ -223,6 +247,18 @@ int				floodfill_void(t_cub *cub, int r, int c, char **vis);
 
 //---------------------------------MLX FUNCTIONS-------------------------------/
 int				init_mlx(t_cub *cub);
+
+int				x_press(t_cub **cub);
+int				key_release(int keycode, t_cub **cub);
+int				key_press(int keycode, t_cub **cub);
+
+//------------------------------RENDER FUNCTIONS-------------------------------/
+int				render(t_cub *cub);
+void			mini_map_resize(t_cub *cub, char inc);
+
+//-----------------NAV FUNCTIONS-----------------------------------------------/
+void			move_player(t_cub **cub, char dir);
+void			rotate_player(t_cub **cub, char dir);
 
 //-------------------------------Cleaner FUNCTIONS-----------------------------/
 void			simple_error_exit(const char *msg);
