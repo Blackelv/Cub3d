@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/06/27 18:07:11 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/06/29 20:56:16 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,6 @@ void	draw_view_line(t_player *player, int color, t_img *frame)
 	dy = -sin(player->angle) * MINI_SCALE;
 	player_dest.x = (player_pos.x + (int)dx);
 	player_dest.y = (player_pos.y + (int)dy);
-	// printf("pos: (%d,%d) -> dest (%d,%d)", player_pos.x, player_pos.y,
-	// player_dest.x, player_dest.y);
 	draw_line(player_pos, player_dest, color, frame);
 }
 
@@ -174,10 +172,142 @@ void	draw_unit_line(t_img *frame, t_player *player, int range, int color)
 
 // Draw FOV
 void	draw_fov(t_cub *cub, int color)
-
 {
+	double		ra;
+	t_xy_double	p;
+	t_xy_double	r;
+	int			d;
+	t_xy_point	r_point;
+	t_xy_point	p_point;
+	float		Tan;
+	float		x_off;
+	float		y_off;
+	int			dof;
+	t_xy_double	dist;
+	t_xy_point	grid;
+	t_xy_double	v;
+	t_xy_double	h;
+
+	p.x = cub->player.x;
+	p.y = cub->player.y;
+	d = -30;
+	while (d < 30)
+	{
+		dof = 0;
+		dist.x = 1000000;
+		dist.y = 1000000;
+		ra = (cub->player.angle) + (d * DEG_1); // ray angle
+		//-----   Vertical Line Check -----------------------
+		Tan = -tan(ra);
+		if (cos(ra) > 0.001) // looking left
+		{
+			r.x = ((int)p.x + 1.0);
+			x_off = 1.0;
+			y_off = x_off * Tan;
+		}
+		else if (cos(ra) < -0.001) // looking right
+		{
+			r.x = (int)p.x - 0.0001;
+			x_off = -1.0;
+			y_off = x_off * Tan;
+		}
+		else
+		{
+			r.x = p.x;
+			r.y = p.y;
+			dof = DOF;
+		}
+		r.y = p.y + (r.x - p.x) * Tan; // initial Y
+		// check vertical grid lines
+		while (dof < DOF)
+		{
+			grid.x = (int)(r.x);
+			grid.y = (int)(r.y);
+			printf("[V] grid x: %d, grid y : %d\n", grid.x, grid.y);
+			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
+				&& grid.y < cub->map.height
+				&& cub->map.grid[grid.y][grid.x] == '1')
+			{
+				dof = DOF; // end loop
+				dist.y = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
+			}
+			else
+			{
+				// check next gridline
+				r.x += x_off;
+				r.y += y_off;
+				dof += 1;
+			}
+		}
+		// vertical hit
+		v.x = r.x;
+		v.y = r.y;
+		// --------------horzontal line check -----------------------------
+		dof = 0;
+		// horizontal line angle
+		if (tan(ra))
+			Tan = -1.0 / tan(ra);
+		else
+			Tan = -1.0;
+		if (sin(ra) > 0.001) // looking up
+		{
+			r.y = (int)p.y - 0.0001;
+			y_off = -1.0;
+			x_off = y_off * Tan;
+		}
+		else if (sin(ra) < -0.001) // looking down
+		{
+			r.y = (int)p.y + 1.0;
+			y_off = 1.0;
+			x_off = y_off * Tan;
+		}
+		else
+		{
+			r.x = p.x;
+			r.y = p.y;
+			dof = DOF;
+		}
+		r.x = p.x + (r.y - p.y) * Tan;
+		// check horzontal grid lines
+		while (dof < DOF)
+		{
+			grid.x = (int)(r.x);
+			grid.y = (int)(r.y);
+			printf("[H] grid x: %d, grid y : %d\n", grid.x, grid.y);
+			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
+				&& grid.y < cub->map.height
+				&& cub->map.grid[grid.y][grid.x] == '1')
+			{
+				dof = DOF; // end loop
+				dist.x = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
+			}
+			else
+			{
+				// check next gridline
+				r.x += x_off;
+				r.y += y_off;
+				dof += 1;
+			}
+		}
+		// horizontal hit
+		h.x = r.x;
+		h.y = r.y;
+		// Identify shortest line
+		if (dist.y < dist.x)
+		{
+			r.x = v.x;
+			r.y = v.y;
+			dist.x = dist.y;
+		}
+		r_point.x = r.x * MINI_SCALE;
+		r_point.y = r.y * MINI_SCALE;
+		p_point.x = p.x * MINI_SCALE;
+		p_point.y = p.y * MINI_SCALE;
+		draw_line(p_point, r_point, color, &(cub->frame));
+		d++;
+	}
 	// draw primary view line
-	draw_unit_line(&cub->frame, &cub->player, cub->map.map_range, color);
+	// draw_unit_line(&cub->frame, &cub->player, cub->map.map_range, color);
 }
 
 // Draw Player
@@ -205,45 +335,6 @@ void	draw_player(t_img *frame, t_player player, int range, int color)
 		}
 		i++;
 	}
-	// 	int		i;
-	// 	int		j;
-	// 	double	r;
-	// 	double	x_pos;
-	// 	double	y_pos;
-	// 	r = round(MINI_SCALE / 3);
-	// 	// double	ic;
-	// 	// double	jc;
-	// 	x_pos = (int)(player.x * MINI_SCALE);
-	// 	y_pos = (int)(player.y * MINI_SCALE);
-	// 	// (void)range;
-	// 	// pixel_put(frame, (player.x * MINI_SCALE), (player.y * MINI_SCALE),
-	// 	// color);
-	// 	i = -r;
-	// 	while (i < r)
-	// 	{
-	// 		j = -r;
-	// 		while (j < r)
-	// 		{
-	// 			if (fabs(sqrt((i * i) + (j * j))) <= r)
-	// 			{
-	// 				if (player.x >= range)
-	// 					x_pos = range + (player.x - (int)player.x);
-	// 				else
-	// 					x_pos = player.x;
-	// 				if (player.y >= range)
-	// 					y_pos = range + (player.y - (int)player.y);
-	// 				else
-	// 					y_pos = player.y;
-	// 				pixel_put(frame, ((int)(x_pos * MINI_SCALE) + j
-	//	+ (MINI_SCALE
-	// 							/ 2)), ((int)(y_pos * MINI_SCALE) + i
-	//			- (MINI_SCALE
-	// 							/ 2)), color);
-	// 			}
-	// 			j++;
-	// 		}
-	// 		i++;
-	// 	}
 }
 
 // minimap
@@ -276,7 +367,8 @@ void	draw_minimap(t_cub *cub)
 		{
 			// circular preview
 			// if (ceil(fabs(sqrt((fabs(x - cub->player.x) * fabs(x
-			// 						- cub->player.x)) + (fabs(y - cub->player.y)
+			// 						- cub->player.x)) + (fabs(y
+			//	- cub->player.y)
 			// 					* fabs(y - cub->player.y))))) < range)
 			// rectangular preview
 			if (((x - cub->player.x) < range) && ((y - cub->player.y) < range))
@@ -286,19 +378,20 @@ void	draw_minimap(t_cub *cub)
 				else if (cub->map.grid[y][x] == '1')
 					block_put(&cub->frame, x - x_orig, y - y_orig, 0xFF0000);
 			}
-			// else
-			// {
-			// 	if (cub->map.grid[y][x] == '0')
-			// 		block_put(&cub->frame, x - 6, y - 6, 0x00FFFF);
-			// 	else if (cub->map.grid[y][x] == '1')
-			// 		block_put(&cub->frame, x - 6, y - 6, 0xFF0000);
-			// }
+			else
+			{
+				if (cub->map.grid[y][x] == '0')
+					block_put(&cub->frame, x - 6, y - 6, 0x00FFFF);
+				else if (cub->map.grid[y][x] == '1')
+					block_put(&cub->frame, x - 6, y - 6, 0xFF0000);
+			}
 			x++;
 		}
 		y++;
 	}
 	draw_player(&cub->frame, cub->player, range, 0x000000);
 	draw_view_line(&cub->player, 0xFF0000, &cub->frame);
+	draw_fov(cub, 0x000000);
 	// player_pos.x = cub->player.x;
 	// player_pos.y = cub->player.y;
 	// draw_line(player_pos, (t_xy_point){0, 0}, 0xFF00FF, &cub->frame);

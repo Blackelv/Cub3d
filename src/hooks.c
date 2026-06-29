@@ -58,13 +58,13 @@ int	key_press(int keycode, t_cub **cub)
 	// printf("Key Code: %d!\n", keycode);
 	// increment = 1.0 / MINI_SCALE;
 	// printf("Imcrement %f ", increment);
-	if (keycode == 119)
+	if (keycode == 119) // W
 		move_player(cub, 'F');
-	if (keycode == 115)
+	if (keycode == 115) // S
 		move_player(cub, 'B');
-	if (keycode == 97)
+	if (keycode == 97) // A
 		move_player(cub, 'L');
-	if (keycode == 100)
+	if (keycode == 100) // D
 		move_player(cub, 'R');
 	if (keycode == 0xff51) // Right
 		rotate_player(cub, 'L');

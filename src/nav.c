@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/06/27 18:43:10 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/06/29 21:03:43 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,26 +63,6 @@ void	update_collisions(t_cub *cub)
 	cub->player.collision.E = collision_check(cub, 'E', step);
 	cub->player.collision.W = collision_check(cub, 'W', step);
 }
-// void	move_player(t_cub **cub, char dir)
-// {
-// 	double	step;
-
-// 	// collision check
-// 	update_collisions(*cub);
-// 	int speed = 1; // maybe convert into player property
-// 	step = ((SPEED * speed * 1.0) / MINI_SCALE * 1.0);
-// 	// printf("Step: %f\n", step);
-// 	printf("Start: x %f, y %f , ", (*cub)->player.x, (*cub)->player.y);
-// 	if (dir == 'N' && !((*cub)->player.collision.N))
-// 		(*cub)->player.y = (*cub)->player.y - step;
-// 	if (dir == 'S' && !((*cub)->player.collision.S))
-// 		(*cub)->player.y = (*cub)->player.y + step;
-// 	if (dir == 'E' && !((*cub)->player.collision.E))
-// 		(*cub)->player.x = (*cub)->player.x + step;
-// 	if (dir == 'W' && !((*cub)->player.collision.W))
-// 		(*cub)->player.x = (*cub)->player.x - step;
-// 	printf("Stop: x %f, y %f\n", (*cub)->player.x, (*cub)->player.y);
-// }
 
 void	move_player(t_cub **cub, char dir)
 {
@@ -90,6 +70,8 @@ void	move_player(t_cub **cub, char dir)
 	double	dx;
 	double	dy;
 
+	dx = 0.0;
+	dy = 0.0;
 	// Calculate dest
 	int speed = 1; // maybe convert into player property
 	step = ((SPEED * speed * 1.0) / MINI_SCALE * 1.0);
@@ -98,20 +80,20 @@ void	move_player(t_cub **cub, char dir)
 		dx = cos((*cub)->player.angle);
 		dy = -sin((*cub)->player.angle);
 	}
-	if (dir == 'B')
+	else if (dir == 'B')
 	{
 		dx = -cos((*cub)->player.angle);
 		dy = sin((*cub)->player.angle);
 	}
-	if (dir == 'L')
+	else if (dir == 'L')
 	{
-		dx = cos(((*cub)->player.angle) + PI / 2);
-		dy = -sin(((*cub)->player.angle) + PI / 2);
+		dx = cos(((*cub)->player.angle) + PI / 2.0);
+		dy = -sin(((*cub)->player.angle) + PI / 2.0);
 	}
-	if (dir == 'R')
+	else if (dir == 'R')
 	{
-		dx = -cos(((*cub)->player.angle) + PI / 2);
-		dy = sin(((*cub)->player.angle) + PI / 2);
+		dx = -cos(((*cub)->player.angle) + PI / 2.0);
+		dy = sin(((*cub)->player.angle) + PI / 2.0);
 	}
 	// collision check
 	update_collisions(*cub);
@@ -131,12 +113,12 @@ void	move_player(t_cub **cub, char dir)
 
 void	rotate_player(t_cub **cub, char dir)
 {
-	int		r;
 	double	new_angle;
-	double	old_x;
-	double	old_y;
-	double	l;
+	int		r;
 
+	// double	old_x;
+	// double	old_y;
+	// double	l;
 	if (dir == 'R')
 		r = -1;
 	else
@@ -149,16 +131,17 @@ void	rotate_player(t_cub **cub, char dir)
 	(*cub)->player.angle = new_angle;
 	printf("Turn %c: %f\n", dir, (*cub)->player.angle);
 	// update player vector
-	old_x = (*cub)->player.dir_x;
-	old_y = (*cub)->player.dir_y;
-	(*cub)->player.dir_x = old_x * cos(new_angle) - old_y * sin(new_angle);
-	(*cub)->player.dir_y = old_x * sin(new_angle) + old_y * cos(new_angle);
-	// normalize to unit length
-	l = sqrt((*cub)->player.dir_x * (*cub)->player.dir_x + (*cub)->player.dir_y
-			* (*cub)->player.dir_y);
-	if (l != 0)
-	{
-		(*cub)->player.dir_x /= l;
-		(*cub)->player.dir_y /= l;
-	}
+	// old_x = (*cub)->player.dir_x;
+	// old_y = (*cub)->player.dir_y;
+	// (*cub)->player.dir_x = old_x * cos(new_angle) - old_y * sin(new_angle);
+	// (*cub)->player.dir_y = old_x * sin(new_angle) + old_y * cos(new_angle);
+	// // normalize to unit length
+	// l = sqrt((*cub)->player.dir_x * (*cub)->player.dir_x
+	// + (*cub)->player.dir_y
+	// 		* (*cub)->player.dir_y);
+	// if (l != 0)
+	// {
+	// 	(*cub)->player.dir_x /= l;
+	// 	(*cub)->player.dir_y /= l;
+	// }
 }

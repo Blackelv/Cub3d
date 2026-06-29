@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/06/27 16:39:11 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/06/29 20:57:48 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define ROT 0.05
 # define MINI_SCALE 20
 # define MAP_RANGE 500
+# define DEG_1 0.01745
+# define DOF 40
 
 # define PI 3.1415926535
 
@@ -221,6 +223,12 @@ typedef struct xy_point
 	int			x;
 	int			y;
 }				t_xy_point;
+
+typedef struct xy_double
+{
+	double		x;
+	double		y;
+}				t_xy_double;
 
 //--------------------------------Main FUNCTIONS-------------------------------/
 
