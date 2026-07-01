@@ -23,7 +23,7 @@
 int	x_press(t_cub **cub)
 {
 	clean_cub3d(*cub);
-	// free(*cub);
+	free(*cub);
 	exit(0);
 	return (0);
 }

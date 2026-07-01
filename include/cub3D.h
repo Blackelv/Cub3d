@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/06/29 20:57:48 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/01 22:48:01 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # define MINI_SCALE 20
 # define MAP_RANGE 500
 # define DEG_1 0.01745
-# define DOF 40
+// # define DOF 40
 
 # define PI 3.1415926535
 
@@ -208,16 +208,6 @@ typedef struct s_assets
 	bool		c_set;
 }				t_assets;
 
-typedef struct s_cub
-{
-	void		*mlx;
-	void		*win;
-	t_map		map;
-	t_player	player;
-	t_img		frame;
-	t_assets	assets;
-}				t_cub;
-
 typedef struct xy_point
 {
 	int			x;
@@ -229,6 +219,26 @@ typedef struct xy_double
 	double		x;
 	double		y;
 }				t_xy_double;
+
+typedef struct raycast
+{
+	float ra; // ray angle
+	float x;  // intersection point (r.x & r.y)
+	float		y;
+	float		dist;
+	int wall; // N / E / S / W
+}				t_raycast;
+
+typedef struct s_cub
+{
+	void		*mlx;
+	void		*win;
+	t_map		map;
+	t_player	player;
+	t_img		frame;
+	t_assets	assets;
+	t_raycast	raycaster[FOV];
+}				t_cub;
 
 //--------------------------------Main FUNCTIONS-------------------------------/
 
@@ -263,6 +273,7 @@ int				key_press(int keycode, t_cub **cub);
 //------------------------------RENDER FUNCTIONS-------------------------------/
 int				render(t_cub *cub);
 void			mini_map_resize(t_cub *cub, char inc);
+int				generate_raycast(t_cub *cub);
 
 //-----------------NAV FUNCTIONS-----------------------------------------------/
 void			move_player(t_cub **cub, char dir);

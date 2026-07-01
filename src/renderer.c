@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/06/29 20:56:16 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/01 23:05:19 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,18 @@ int	valid_pixel(int x, int y)
 	if (x >= 0 && x <= WIN_WIDTH && y >= 0 && y <= WIN_HEIGHT)
 		return (1);
 	return (0);
+}
+
+int	pixel_exists(t_img *frame, int x, int y)
+{
+	char	*dst;
+	int		offset;
+
+	if (!valid_pixel(x, y))
+		return (0);
+	offset = ((y * frame->line_len) + (x * (frame->bpp / 8)));
+	dst = frame->addr + offset; // pixel location
+	return (*(unsigned int *)dst != 0);
 }
 
 void	pixel_put(t_img *frame, int x, int y, int color)
@@ -170,144 +182,44 @@ void	draw_unit_line(t_img *frame, t_player *player, int range, int color)
 	}
 }
 
-// Draw FOV
-void	draw_fov(t_cub *cub, int color)
+int	get_wall_color(char wall)
 {
-	double		ra;
-	t_xy_double	p;
-	t_xy_double	r;
+	int	color;
+
+	if (wall == 'N')
+		color = 0xEF476F; // red
+	else if (wall == 'E')
+		color = 0x8338EC; // yellow
+	else if (wall == 'S')
+		color = 0x06D6A0; // greeen
+	else if (wall == 'W')
+		color = 0x04151F; // blue
+	else
+		color = 0xFFFFFF; // white
+	return (color);
+}
+
+// Draw FOV
+void	draw_fov(t_cub *cub)
+{
 	int			d;
+	int			color;
 	t_xy_point	r_point;
 	t_xy_point	p_point;
-	float		Tan;
-	float		x_off;
-	float		y_off;
-	int			dof;
-	t_xy_double	dist;
-	t_xy_point	grid;
-	t_xy_double	v;
-	t_xy_double	h;
+	char		wall;
 
-	p.x = cub->player.x;
-	p.y = cub->player.y;
-	d = -30;
-	while (d < 30)
+	p_point.x = cub->player.x * MINI_SCALE;
+	p_point.y = cub->player.y * MINI_SCALE;
+	d = 0;
+	while (d < FOV)
 	{
-		dof = 0;
-		dist.x = 1000000;
-		dist.y = 1000000;
-		ra = (cub->player.angle) + (d * DEG_1); // ray angle
-		//-----   Vertical Line Check -----------------------
-		Tan = -tan(ra);
-		if (cos(ra) > 0.001) // looking left
-		{
-			r.x = ((int)p.x + 1.0);
-			x_off = 1.0;
-			y_off = x_off * Tan;
-		}
-		else if (cos(ra) < -0.001) // looking right
-		{
-			r.x = (int)p.x - 0.0001;
-			x_off = -1.0;
-			y_off = x_off * Tan;
-		}
-		else
-		{
-			r.x = p.x;
-			r.y = p.y;
-			dof = DOF;
-		}
-		r.y = p.y + (r.x - p.x) * Tan; // initial Y
-		// check vertical grid lines
-		while (dof < DOF)
-		{
-			grid.x = (int)(r.x);
-			grid.y = (int)(r.y);
-			printf("[V] grid x: %d, grid y : %d\n", grid.x, grid.y);
-			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
-				&& grid.y < cub->map.height
-				&& cub->map.grid[grid.y][grid.x] == '1')
-			{
-				dof = DOF; // end loop
-				dist.y = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
-			}
-			else
-			{
-				// check next gridline
-				r.x += x_off;
-				r.y += y_off;
-				dof += 1;
-			}
-		}
-		// vertical hit
-		v.x = r.x;
-		v.y = r.y;
-		// --------------horzontal line check -----------------------------
-		dof = 0;
-		// horizontal line angle
-		if (tan(ra))
-			Tan = -1.0 / tan(ra);
-		else
-			Tan = -1.0;
-		if (sin(ra) > 0.001) // looking up
-		{
-			r.y = (int)p.y - 0.0001;
-			y_off = -1.0;
-			x_off = y_off * Tan;
-		}
-		else if (sin(ra) < -0.001) // looking down
-		{
-			r.y = (int)p.y + 1.0;
-			y_off = 1.0;
-			x_off = y_off * Tan;
-		}
-		else
-		{
-			r.x = p.x;
-			r.y = p.y;
-			dof = DOF;
-		}
-		r.x = p.x + (r.y - p.y) * Tan;
-		// check horzontal grid lines
-		while (dof < DOF)
-		{
-			grid.x = (int)(r.x);
-			grid.y = (int)(r.y);
-			printf("[H] grid x: %d, grid y : %d\n", grid.x, grid.y);
-			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
-				&& grid.y < cub->map.height
-				&& cub->map.grid[grid.y][grid.x] == '1')
-			{
-				dof = DOF; // end loop
-				dist.x = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
-			}
-			else
-			{
-				// check next gridline
-				r.x += x_off;
-				r.y += y_off;
-				dof += 1;
-			}
-		}
-		// horizontal hit
-		h.x = r.x;
-		h.y = r.y;
-		// Identify shortest line
-		if (dist.y < dist.x)
-		{
-			r.x = v.x;
-			r.y = v.y;
-			dist.x = dist.y;
-		}
-		r_point.x = r.x * MINI_SCALE;
-		r_point.y = r.y * MINI_SCALE;
-		p_point.x = p.x * MINI_SCALE;
-		p_point.y = p.y * MINI_SCALE;
+		wall = cub->raycaster[d].wall;
+		color = get_wall_color(wall);
+		r_point.x = cub->raycaster[d].x * MINI_SCALE;
+		r_point.y = cub->raycaster[d].y * MINI_SCALE;
 		draw_line(p_point, r_point, color, &(cub->frame));
 		d++;
 	}
-	// draw primary view line
-	// draw_unit_line(&cub->frame, &cub->player, cub->map.map_range, color);
 }
 
 // Draw Player
@@ -374,9 +286,9 @@ void	draw_minimap(t_cub *cub)
 			if (((x - cub->player.x) < range) && ((y - cub->player.y) < range))
 			{
 				if (cub->map.grid[y][x] == '0')
-					block_put(&cub->frame, x - x_orig, y - y_orig, 0x00FFFF);
+					block_put(&cub->frame, x - x_orig, y - y_orig, 0xD8E2DC);
 				else if (cub->map.grid[y][x] == '1')
-					block_put(&cub->frame, x - x_orig, y - y_orig, 0xFF0000);
+					block_put(&cub->frame, x - x_orig, y - y_orig, 0xFCA311);
 			}
 			else
 			{
@@ -390,18 +302,92 @@ void	draw_minimap(t_cub *cub)
 		y++;
 	}
 	draw_player(&cub->frame, cub->player, range, 0x000000);
+	draw_fov(cub);
 	draw_view_line(&cub->player, 0xFF0000, &cub->frame);
-	draw_fov(cub, 0x000000);
 	// player_pos.x = cub->player.x;
 	// player_pos.y = cub->player.y;
 	// draw_line(player_pos, (t_xy_point){0, 0}, 0xFF00FF, &cub->frame);
 	// draw_fov(cub, 0xFF00FF);
 }
 
-// draw borders of map (maybe show only a portion from player)
-// draw walls
-// draw player position
-// add orientation
+void	draw_columns(t_cub *cub)
+{
+	int			col_width;
+	int			d;
+	t_raycast	ray;
+	int			line_height;
+	float		dist;
+	int			start_x;
+	int			start_y;
+	int			i;
+	int			color;
+	int			j;
+
+	/// frame dimensions
+	col_width = (int)(WIN_WIDTH / FOV);
+	// float scale = 0.66
+	// ray, distance, direction
+	d = FOV - 1;
+	while (d >= 0)
+	{
+		ray = cub->raycaster[d];
+		dist = ray.dist * 3;
+		if (dist < 1)
+			dist = 1;
+		line_height = ((3 * WIN_HEIGHT) / dist);
+		if (line_height > WIN_HEIGHT)
+			line_height = WIN_HEIGHT;
+		start_x = col_width * (FOV - d);
+		start_y = (int)((WIN_HEIGHT - line_height) / 2);
+		i = 0;
+		color = get_wall_color(ray.wall);
+		while (i < line_height)
+		{
+			j = 0;
+			while (j < col_width)
+			{
+				if (!pixel_exists(&(cub->frame), start_x - j, start_y + i))
+					pixel_put(&(cub->frame), start_x - j, start_y + i, color);
+				j++;
+			}
+			i++;
+		}
+		d--;
+	}
+	// may/min distance
+}
+
+void	draw_ceil_floor(t_cub *cub)
+{
+	int	x;
+	int	y;
+	int	ceiling;
+	int	floor;
+
+	x = 0;
+	ceiling = cub->assets.ceiling;
+	floor = cub->assets.floor;
+	// ceiling = 0xFFFFFF;
+	// floor = 0x666666;
+	// printf("Ceiling: %d, Floor: %d\n", ceiling, floor);
+	while (x < WIN_WIDTH)
+	{
+		y = 0;
+		while (y < (WIN_HEIGHT / 2))
+		{
+			if (!pixel_exists(&(cub->frame), x, y))
+				pixel_put(&(cub->frame), x, y, ceiling);
+			y++;
+		}
+		while (y < WIN_HEIGHT)
+		{
+			if (!pixel_exists(&(cub->frame), x, y))
+				pixel_put(&(cub->frame), x, y, floor);
+			y++;
+		}
+		x++;
+	}
+}
 
 int	render(t_cub *cub)
 {
@@ -411,8 +397,13 @@ int	render(t_cub *cub)
 	cub->frame.img = mlx_new_image(cub->mlx, WIN_WIDTH, WIN_HEIGHT);
 	cub->frame.addr = mlx_get_data_addr(cub->frame.img, &cub->frame.bpp,
 			&cub->frame.line_len, &cub->frame.endian);
+	generate_raycast(cub);
 	// Draw Minimap
 	draw_minimap(cub);
+	// Draw Columns
+	draw_columns(cub);
+	// Draw Ceiling/Floor
+	draw_ceil_floor(cub);
 	mlx_put_image_to_window(cub->mlx, cub->win, cub->frame.img, 0, 0);
 	return (0);
 }

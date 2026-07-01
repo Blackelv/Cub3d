@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/06/29 21:03:43 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/06/29 21:12:28 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,11 @@ void	move_player(t_cub **cub, char dir)
 		dx = -cos(((*cub)->player.angle) + PI / 2.0);
 		dy = sin(((*cub)->player.angle) + PI / 2.0);
 	}
+	// drift compensation:
+	if (fabs(dx) < 0.001)
+		dx = 0.0;
+	if (fabs(dy) < 0.0001)
+		dy = 0.0;
 	// collision check
 	update_collisions(*cub);
 	// printf("Step: %f\n", step);
