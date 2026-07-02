@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/01 22:48:01 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/02 07:45:00 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,7 @@ typedef struct s_cub
 	t_img		frame;
 	t_assets	assets;
 	t_raycast	raycaster[FOV];
+	bool		update;
 }				t_cub;
 
 //--------------------------------Main FUNCTIONS-------------------------------/
@@ -288,5 +289,11 @@ void			clean_mlx_ptrs(t_cub *cub);
 const char		*err_mapper(int code);
 int				err_msg(const char *details, int code);
 const char		*parsing_errors(int code);
+
+//--------------------Testing--------------------/
+# include <sys/time.h>
+
+void			fps_check(void);
+void			fps_check_constant(void);
 
 #endif

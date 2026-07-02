@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/01 23:05:19 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/02 08:38:19 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,17 +341,28 @@ void	draw_columns(t_cub *cub)
 		start_y = (int)((WIN_HEIGHT - line_height) / 2);
 		i = 0;
 		color = get_wall_color(ray.wall);
-		while (i < line_height)
+		while (i < col_width)
 		{
 			j = 0;
-			while (j < col_width)
+			while (j < line_height)
 			{
-				if (!pixel_exists(&(cub->frame), start_x - j, start_y + i))
-					pixel_put(&(cub->frame), start_x - j, start_y + i, color);
+				// if (!pixel_exists(&(cub->frame), start_x - i, start_y + j))
+				pixel_put(&(cub->frame), start_x - i, start_y + j, color);
 				j++;
 			}
 			i++;
 		}
+		// while (i < line_height)
+		// {
+		// 	j = 0;
+		// 	while (j < col_width)
+		// 	{
+		// 		if (!pixel_exists(&(cub->frame), start_x - j, start_y + i))
+		// 			pixel_put(&(cub->frame), start_x - j, start_y + i, color);
+		// 		j++;
+		// 	}
+		// 	i++;
+		// }
 		d--;
 	}
 	// may/min distance
@@ -370,27 +381,34 @@ void	draw_ceil_floor(t_cub *cub)
 	// ceiling = 0xFFFFFF;
 	// floor = 0x666666;
 	// printf("Ceiling: %d, Floor: %d\n", ceiling, floor);
-	while (x < WIN_WIDTH)
+	y = 0;
+	while (y < (WIN_HEIGHT / 2))
 	{
-		y = 0;
-		while (y < (WIN_HEIGHT / 2))
+		x = 0;
+		while (x < WIN_WIDTH)
 		{
-			if (!pixel_exists(&(cub->frame), x, y))
-				pixel_put(&(cub->frame), x, y, ceiling);
-			y++;
+			// if (!pixel_exists(&(cub->frame), x, y))
+			pixel_put(&(cub->frame), x, y, ceiling);
+			x++;
 		}
-		while (y < WIN_HEIGHT)
+		y++;
+	}
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
 		{
-			if (!pixel_exists(&(cub->frame), x, y))
-				pixel_put(&(cub->frame), x, y, floor);
-			y++;
+			// if (!pixel_exists(&(cub->frame), x, y))
+			pixel_put(&(cub->frame), x, y, floor);
+			x++;
 		}
-		x++;
+		y++;
 	}
 }
 
 int	render(t_cub *cub)
 {
+	fps_check_constant();
 	// clear current img
 	if (cub->frame.img)
 		mlx_destroy_image(cub->mlx, cub->frame.img);
@@ -398,12 +416,12 @@ int	render(t_cub *cub)
 	cub->frame.addr = mlx_get_data_addr(cub->frame.img, &cub->frame.bpp,
 			&cub->frame.line_len, &cub->frame.endian);
 	generate_raycast(cub);
-	// Draw Minimap
-	draw_minimap(cub);
+	// Draw Ceiling/Floor
+	// draw_ceil_floor(cub);
 	// Draw Columns
 	draw_columns(cub);
-	// Draw Ceiling/Floor
-	draw_ceil_floor(cub);
+	// Draw Minimap
+	draw_minimap(cub);
 	mlx_put_image_to_window(cub->mlx, cub->win, cub->frame.img, 0, 0);
 	return (0);
 }

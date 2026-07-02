@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 07:49:02 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/01 22:55:26 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/02 08:41:45 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	generate_raycast(t_cub *cub)
 		}
 		// identify wall orientation:
 		wall_val = fabs(1.0 - fabs(rays[d].x - (float)(int)rays[d].x));
-		if (wall_val >= 0.999 || wall_val < 0.001) // vertical
+		if (wall_val >= 0.9999 || wall_val < 0.0001) // vertical
 		{
 			if ((rays[d].ra) > (PI / 2) && rays[d].ra < (3 * PI / 2))
 			{
@@ -183,10 +183,10 @@ int	generate_raycast(t_cub *cub)
 			else
 				rays[d].wall = 'N';
 		}
-		// printf("[%c: %f*]: %f,", rays[d].wall, rays[d].ra, wall_val);
+		// printf("[%c]: %f,", rays[d].wall, wall_val);
 		d++;
 	}
-	// printf("\n");
+	// printf("\n\n");
 	return (1);
 }
 

@@ -75,5 +75,6 @@ int	key_press(int keycode, t_cub **cub)
 	// if (keycode == 0xff54)
 	// 	mini_map_resize(*cub, '-');
 	// mlx_clear_window((*cub)->mlx, (*cub)->win);
+	(*cub)->update = true;
 	return (0);
 }

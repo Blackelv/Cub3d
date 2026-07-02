@@ -6,7 +6,7 @@
 #    By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 10:52:26 by ffrattar          #+#    #+#              #
-#    Updated: 2026/07/01 07:20:24 by ffrattar         ###   ########.fr        #
+#    Updated: 2026/07/02 07:43:17 by ffrattar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS = src/main.c src/parsing.c src/validate_config.c src/scene_parse.c \
 	src/floodfill_helper.c src/cleaner.c src/cleaner2.c src/errors.c \
 	src/errors2.c src/init_mlx.c src/player_spawn.c src/hooks.c \
 	src/renderer.c src/nav.c src/mini_map.c src/raycaster.c \
+	src/debug/fps_test.c
 
 OFILES = $(SRCS:.c=.o)
 

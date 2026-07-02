@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/06/29 21:12:28 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/01 23:13:41 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	move_player(t_cub **cub, char dir)
 	// collision check
 	update_collisions(*cub);
 	// printf("Step: %f\n", step);
-	printf("Start: x %f, y %f , ", (*cub)->player.x, (*cub)->player.y);
+	// printf("Start: x %f, y %f , ", (*cub)->player.x, (*cub)->player.y);
 	// Apply movement (check for collisions)
 	if (dy < 0 && !((*cub)->player.collision.N))
 		(*cub)->player.y = (*cub)->player.y + step * dy;
@@ -113,7 +113,7 @@ void	move_player(t_cub **cub, char dir)
 		(*cub)->player.x = (*cub)->player.x + step * dx;
 	if (dx < 0 && !((*cub)->player.collision.W))
 		(*cub)->player.x = (*cub)->player.x + step * dx;
-	printf("Stop: x %f, y %f\n", (*cub)->player.x, (*cub)->player.y);
+	// printf("Stop: x %f, y %f\n", (*cub)->player.x, (*cub)->player.y);
 }
 
 void	rotate_player(t_cub **cub, char dir)
@@ -134,7 +134,7 @@ void	rotate_player(t_cub **cub, char dir)
 	else if (new_angle < 0)
 		new_angle += 2 * PI;
 	(*cub)->player.angle = new_angle;
-	printf("Turn %c: %f\n", dir, (*cub)->player.angle);
+	// printf("Turn %c: %f\n", dir, (*cub)->player.angle);
 	// update player vector
 	// old_x = (*cub)->player.dir_x;
 	// old_y = (*cub)->player.dir_y;
