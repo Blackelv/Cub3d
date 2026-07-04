@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/04 10:29:54 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 16:19:57 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,11 @@
 # define WIN_HEIGHT 900
 # define FOV 600
 # define BLOCK 64
-# define SPEED 1
+# define SPEED 2
 # define ROT 0.05
 # define MINI_SCALE 20
-# define MAP_RANGE 500
+# define MAP_RANGE 10
 # define DEG_1 0.001745
-// # define DOF 40
 
 # define PI 3.1415926535
 
@@ -233,6 +232,7 @@ typedef struct s_cub
 {
 	void		*mlx;
 	void		*win;
+	bool		show_minimap;
 	t_map		map;
 	t_player	player;
 	t_img		frame;
@@ -274,6 +274,7 @@ int				key_press(int keycode, t_cub **cub);
 //------------------------------RENDER FUNCTIONS-------------------------------/
 int				render(t_cub *cub);
 void			mini_map_resize(t_cub *cub, char inc);
+void			mini_map_toggle(t_cub *cub);
 int				generate_raycast(t_cub *cub);
 
 //-----------------NAV FUNCTIONS-----------------------------------------------/

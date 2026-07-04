@@ -6,21 +6,22 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/01 23:13:41 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 14:30:49 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
 // calculate grid unit based on scale and step
-int	unit(double dir, double step, int pos)
+int	unit(double dir, double step, int flip)
 {
+	double	offset;
 	double	buffer;
 
-	buffer = 0.0;
+	offset = 0.5;
 	// if (MINI_SCALE > 10)
 	// 	buffer = (1.0 / (MINI_SCALE)) * 3 * pos;
-	buffer += step * pos;
+	buffer = (step + offset) * flip;
 	// need to stay 3 steps from wall on large maps
 	int unit = (int)floor((dir + buffer)); // round up
 	return (unit);
@@ -40,7 +41,7 @@ int	collision_check(t_cub *cub, char dir, double step)
 		if (cub->map.grid[unit(cub->player.y, step, -1)][x] == '1')
 			return (printf("Hit N Wall!\n"), 1);
 	if (dir == 'S')
-		if (cub->map.grid[unit(cub->player.y, step, 1)][x] == '1')
+		if (cub->map.grid[unit(cub->player.y, -step, 1)][x] == '1')
 			return (printf("Hit S Wall!\n"), 1);
 	if (dir == 'E')
 		if (cub->map.grid[y][unit(cub->player.x, step, 1)] == '1')

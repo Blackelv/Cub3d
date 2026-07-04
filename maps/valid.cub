@@ -1,7 +1,7 @@
-NO ./textures/n.xpm
-SO ./textures/s.xpm
-WE ./textures/w.xpm
-EA ./textures/e.xpm
+NO ./maps/big_textures/n.xpm
+SO ./maps/big_textures/s.xpm
+WE ./maps/big_textures/w.xpm
+EA ./maps/big_textures/e.xpm
 
 F 50,50,50
 C 20,20,20

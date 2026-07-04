@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 07:49:02 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/04 11:08:08 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 15:09:05 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ int	generate_raycast(t_cub *cub)
 	float		angle;
 	float		wall_val_prev;
 
-	// t_xy_double	h;
-	// t_xy_point	r_point;
-	// t_xy_point	p_point;
 	rays = cub->raycaster;
 	p.x = cub->player.x;
 	p.y = cub->player.y;
@@ -169,7 +166,7 @@ int	generate_raycast(t_cub *cub)
 		// identify wall orientation:
 		wall_val = fabs(1.0 - fabs(rays[d].x - (float)(int)rays[d].x));
 		// next wall is closest
-		if (d == 0 || (d != FOV && (fabs(rays[d].dist - rays[d
+		if (d == 0 || (d < FOV && (fabs(rays[d].dist - rays[d
 						- 1].dist) > fabs(rays[d].dist - rays[d + 1].dist))))
 			wall_val_prev = fabs(1.0 - fabs(rays[d + 1].x - (float)(int)rays[d
 						+ 1].x));
@@ -195,149 +192,7 @@ int	generate_raycast(t_cub *cub)
 			else
 				rays[d].wall = 'N';
 		}
-		// printf("[%c]: %f,", rays[d].wall, wall_val);
 		d++;
 	}
-	// printf("\n\n");
 	return (1);
 }
-
-// int	generate_raycast(t_cub *cub)
-// {
-// 	double		ra;
-// 	t_xy_double	p;
-// 	t_xy_double	r;
-// 	float		Tan;
-// 	float		x_off;
-// 	float		y_off;
-// 	int			dof;
-// 	t_xy_double	dist;
-// 	t_xy_point	grid;
-// 	t_xy_double	v;
-// 	t_xy_double	h;
-// 	int			DOF;
-// 	int			d;
-
-// 	p.x = cub->player.x;
-// 	p.y = cub->player.y;
-// 	// set max DOF based on largest dim of map
-// 	DOF = cub->map.width;
-// 	if (cub->map.height > DOF)
-// 		DOF = cub->map.height;
-// 	d = 0;
-// 	while (d < FOV)
-// 	{
-// 		dof = 0;
-// 		dist.x = 1000000;
-// 		dist.y = 1000000;
-// 		ra = (cub->player.angle) + ((d - (FOV / 2.0)) * DEG_1);
-// 		// ray angle
-// 		//--------------   Vertical Line Check -----------------------
-// 		Tan = -tan(ra);
-// 		if (cos(ra) > 0.001) // looking left
-// 		{
-// 			r.x = ((int)p.x + 1.0);
-// 			x_off = 1.0;
-// 			y_off = x_off * Tan;
-// 		}
-// 		else if (cos(ra) < -0.001) // looking right
-// 		{
-// 			r.x = (int)p.x - 0.0001;
-// 			x_off = -1.0;
-// 			y_off = x_off * Tan;
-// 		}
-// 		else
-// 		{
-// 			r.x = p.x;
-// 			r.y = p.y;
-// 			dof = DOF;
-// 		}
-// 		r.y = p.y + (r.x - p.x) * Tan; // initial Y
-// 		// check vertical grid lines
-// 		while (dof < DOF)
-// 		{
-// 			grid.x = (int)(r.x);
-// 			grid.y = (int)(r.y);
-// 			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
-// 				&& grid.y < cub->map.height
-// 				&& cub->map.grid[grid.y][grid.x] == '1')
-// 			{
-// 				dof = DOF; // end loop
-// 				dist.y = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
-// 			}
-// 			else
-// 			{
-// 				// check next gridline
-// 				r.x += x_off;
-// 				r.y += y_off;
-// 				dof += 1;
-// 			}
-// 		}
-// 		// vertical hit
-// 		v.x = r.x;
-// 		v.y = r.y;
-// 		// --------------horzontal line check -----------------------------
-// 		dof = 0;
-// 		// horizontal line angle
-// 		if (tan(ra))
-// 			Tan = -1.0 / tan(ra);
-// 		else
-// 			Tan = -1.0;
-// 		if (sin(ra) > 0.001) // looking up
-// 		{
-// 			r.y = (int)p.y - 0.0001;
-// 			y_off = -1.0;
-// 			x_off = y_off * Tan;
-// 		}
-// 		else if (sin(ra) < -0.001) // looking down
-// 		{
-// 			r.y = (int)p.y + 1.0;
-// 			y_off = 1.0;
-// 			x_off = y_off * Tan;
-// 		}
-// 		else
-// 		{
-// 			r.x = p.x;
-// 			r.y = p.y;
-// 			dof = DOF;
-// 		}
-// 		r.x = p.x + (r.y - p.y) * Tan;
-// 		// check horzontal grid lines
-// 		while (dof < DOF)
-// 		{
-// 			grid.x = (int)(r.x);
-// 			grid.y = (int)(r.y);
-// 			if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
-// 				&& grid.y < cub->map.height
-// 				&& cub->map.grid[grid.y][grid.x] == '1')
-// 			{
-// 				dof = DOF; // end loop
-// 				dist.x = cos(ra) * (r.x - p.x) - sin(ra) * (r.y - p.y);
-// 			}
-// 			else
-// 			{
-// 				// check next gridline
-// 				r.x += x_off;
-// 				r.y += y_off;
-// 				dof += 1;
-// 			}
-// 		}
-// 		// horizontal hit
-// 		h.x = r.x;
-// 		h.y = r.y;
-// 		// Identify shortest line
-// 		if (dist.y < dist.x)
-// 		{
-// 			r.x = v.x;
-// 			r.y = v.y;
-// 			dist.x = dist.y;
-// 		}
-// 		// saving
-// 		cub->raycaster[d].x = r.x;
-// 		cub->raycaster[d].y = r.y;
-// 		// r_point[d].x = r.x * MINI_SCALE;
-// 		// r_point[d].y = r.y * MINI_SCALE;
-// 		d++;
-// 	}
-// 	return (1);
-// }

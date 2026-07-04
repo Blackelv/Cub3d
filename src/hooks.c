@@ -70,11 +70,16 @@ int	key_press(int keycode, t_cub **cub)
 		rotate_player(cub, 'L');
 	if (keycode == 0xff53) // Left
 		rotate_player(cub, 'R');
-	// if (keycode == 0xff52)
-	// 	mini_map_resize(*cub, '+');
-	// if (keycode == 0xff54)
-	// 	mini_map_resize(*cub, '-');
+	if (keycode == 0xff52)
+		mini_map_resize(*cub, '+');
+	if (keycode == 0xff54)
+		mini_map_resize(*cub, '-');
+	if (keycode == 0x20)
+	{
+		printf("range: %d\n", (*cub)->map.map_range);
+		mini_map_toggle(*cub);
+	}
 	// mlx_clear_window((*cub)->mlx, (*cub)->win);
-	(*cub)->update = true;
+	// (*cub)->update = true;
 	return (0);
 }

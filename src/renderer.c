@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/04 11:14:31 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 16:22:19 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,15 +120,21 @@ void	draw_line(t_xy_point p1, t_xy_point p2, int color, t_img *frame)
 	return ;
 }
 
-void	draw_view_line(t_player *player, int color, t_img *frame)
+void	draw_view_line(t_player *player, int color, int range, t_img *frame)
 {
 	t_xy_point	player_pos;
 	t_xy_point	player_dest;
 	double		dx;
 	double		dy;
 
-	player_pos.x = (player->x) * MINI_SCALE;
-	player_pos.y = (player->y) * MINI_SCALE;
+	if (player->x < range)
+		player_pos.x = (player->x) * MINI_SCALE;
+	else
+		player_pos.x = (int)((range)*MINI_SCALE);
+	if (player->y < range)
+		player_pos.y = (player->y) * MINI_SCALE;
+	else
+		player_pos.y = (int)((range)*MINI_SCALE);
 	dx = cos(player->angle) * MINI_SCALE;
 	dy = -sin(player->angle) * MINI_SCALE;
 	player_dest.x = (player_pos.x + (int)dx);
@@ -184,22 +190,105 @@ void	draw_unit_line(t_img *frame, t_player *player, int range, int color)
 	}
 }
 
-int	get_wall_color(char wall)
+int	get_color_from_texture(t_img texture, int x, int y)
 {
-	int	color;
+	char	*color_address;
+	int		offset;
 
+	if (x <= texture.w && y <= texture.h)
+	{
+		offset = ((y * texture.line_len) + (x * (texture.bpp / 8)));
+		color_address = texture.addr + offset; // pixel location
+		return (*(unsigned int *)color_address);
+	}
+	else
+		return (*(unsigned int *)texture.addr); // color not found
+}
+
+int	get_wall_color(t_cub *cub, int d, float h_percent)
+{
+	int			color;
+	char		wall;
+	int			x;
+	int			y;
+	t_img		*textures;
+	float		x_percent;
+	float		y_percent;
+	t_raycast	*rays;
+
+	rays = cub->raycaster;
+	textures = cub->assets.img;
+	wall = rays[d].wall;
+	x_percent = fabs(rays[d].x - (float)(int)rays[d].x);
+	y_percent = fabs(rays[d].y - (float)(int)rays[d].y);
 	if (wall == 'N')
-		color = 0xEF476F; // red
+	{
+		x = (int)(textures[NORTH].w * x_percent);
+		y = (int)(textures[NORTH].h * h_percent);
+		color = get_color_from_texture(textures[NORTH], x, y); // red
+	}
 	else if (wall == 'E')
-		color = 0x8338EC; // Blue
+	{
+		x = (int)(textures[EAST].w * y_percent);
+		y = (int)(textures[EAST].h * h_percent);
+		color = get_color_from_texture(textures[EAST], x, y); // red
+	}
+	// color = 0x8338EC; // Blue
 	else if (wall == 'S')
-		color = 0x06D6A0; // green
+	{
+		x = (int)(textures[SOUTH].w * x_percent);
+		y = (int)(textures[SOUTH].h * h_percent);
+		color = get_color_from_texture(textures[SOUTH], x, y); // red
+	}
+	// color = 0x06D6A0; // green
 	else if (wall == 'W')
-		color = 0xC4851F; // green
+	{
+		x = (int)(textures[WEST].w * y_percent);
+		y = (int)(textures[WEST].h * h_percent);
+		color = get_color_from_texture(textures[WEST], x, y); // red
+	}
+	// color = 0xC4851F; // green
 	else
 		color = 0xFFFFFF; // white
 	return (color);
 }
+
+// in progress dynamic FOV show
+// void	draw_fov(t_cub *cub, int range)
+// {
+// 	int			d;
+// 	int			color;
+// 	t_xy_point	r_point;
+// 	t_xy_point	p_point;
+
+// 	d = 0;
+// 	color = 0xFF11FF;
+// 	while (d < FOV)
+// 	{
+// 		if (cub->player.x < range)
+// 		{
+// 			p_point.x = (int)((cub->player.x) * MINI_SCALE);
+// 			r_point.x = cub->raycaster[d].x * MINI_SCALE;
+// 		}
+// 		else
+// 		{
+// 			p_point.x = (int)((range)*MINI_SCALE);
+// 			r_point.x = (cub->raycaster[d].x - cub->player.x) * MINI_SCALE;
+// 		}
+// 		if (cub->player.y < range)
+// 		{
+// 			p_point.y = (int)((cub->player.y) * MINI_SCALE);
+// 			r_point.y = cub->raycaster[d].y * MINI_SCALE;
+// 		}
+// 		else
+// 		{
+// 			p_point.y = (int)((range)*MINI_SCALE);
+// 			r_point.y = (cub->raycaster[d].y - cub->player.y) * MINI_SCALE;
+// 		}
+// 		draw_line(p_point, r_point, color, &(cub->frame));
+// 		d++;
+// 	}
+// }
 
 // Draw FOV
 void	draw_fov(t_cub *cub)
@@ -208,15 +297,13 @@ void	draw_fov(t_cub *cub)
 	int			color;
 	t_xy_point	r_point;
 	t_xy_point	p_point;
-	char		wall;
 
 	p_point.x = cub->player.x * MINI_SCALE;
 	p_point.y = cub->player.y * MINI_SCALE;
 	d = 0;
 	while (d < FOV)
 	{
-		wall = cub->raycaster[d].wall;
-		color = get_wall_color(wall);
+		color = 0xFF11FF;
 		r_point.x = cub->raycaster[d].x * MINI_SCALE;
 		r_point.y = cub->raycaster[d].y * MINI_SCALE;
 		draw_line(p_point, r_point, color, &(cub->frame));
@@ -234,9 +321,14 @@ void	draw_player(t_img *frame, t_player player, int range, int color)
 	int	y_pos;
 
 	r = MINI_SCALE / 4;
-	x_pos = (int)(player.x * MINI_SCALE);
-	y_pos = (int)(player.y * MINI_SCALE);
-	(void)range;
+	if (player.x < range)
+		x_pos = (int)((player.x) * MINI_SCALE);
+	else
+		x_pos = (int)((range)*MINI_SCALE);
+	if (player.y < range)
+		y_pos = (int)((player.y) * MINI_SCALE);
+	else
+		y_pos = (int)((range)*MINI_SCALE);
 	i = -r;
 	while (i < r)
 	{
@@ -260,9 +352,6 @@ void	draw_minimap(t_cub *cub)
 	int		x_orig;
 	int		y_orig;
 
-	// t_xy_point	player_pos;
-	// Optionally modify map range
-	// cub->map.map_range = 50; // turn into player/map variable?
 	range = cub->map.map_range;
 	x = 0;
 	y = 0;
@@ -279,12 +368,6 @@ void	draw_minimap(t_cub *cub)
 		x = 0;
 		while (x < cub->map.width)
 		{
-			// circular preview
-			// if (ceil(fabs(sqrt((fabs(x - cub->player.x) * fabs(x
-			// 						- cub->player.x)) + (fabs(y
-			//	- cub->player.y)
-			// 					* fabs(y - cub->player.y))))) < range)
-			// rectangular preview
 			if (((x - cub->player.x) < range) && ((y - cub->player.y) < range))
 			{
 				if (cub->map.grid[y][x] == '0')
@@ -292,24 +375,10 @@ void	draw_minimap(t_cub *cub)
 				else if (cub->map.grid[y][x] == '1')
 					block_put(&cub->frame, x - x_orig, y - y_orig, 0xFCA311);
 			}
-			else
-			{
-				if (cub->map.grid[y][x] == '0')
-					block_put(&cub->frame, x - 6, y - 6, 0x00FFFF);
-				else if (cub->map.grid[y][x] == '1')
-					block_put(&cub->frame, x - 6, y - 6, 0xFF0000);
-			}
 			x++;
 		}
 		y++;
 	}
-	draw_player(&cub->frame, cub->player, range, 0x000000);
-	draw_fov(cub);
-	draw_view_line(&cub->player, 0xFF0000, &cub->frame);
-	// player_pos.x = cub->player.x;
-	// player_pos.y = cub->player.y;
-	// draw_line(player_pos, (t_xy_point){0, 0}, 0xFF00FF, &cub->frame);
-	// draw_fov(cub, 0xFF00FF);
 }
 
 void	draw_columns(t_cub *cub)
@@ -325,72 +394,45 @@ void	draw_columns(t_cub *cub)
 	int			color;
 	int			j;
 
-	/// frame dimensions
 	col_width = (int)(WIN_WIDTH / FOV);
-	// float scale = 0.66
-	// ray, distance, direction
 	d = FOV - 1;
 	while (d >= 0)
 	{
 		ray = cub->raycaster[d];
-		dist = ray.dist * 3;
+		dist = ray.dist * 2.6;
 		if (dist < 1)
 			dist = 1;
 		line_height = ((3 * WIN_HEIGHT) / dist);
-		if (line_height > WIN_HEIGHT)
-			line_height = WIN_HEIGHT;
 		start_x = col_width * (FOV - d);
 		start_y = (int)((WIN_HEIGHT - line_height) / 2);
 		i = 0;
-		color = get_wall_color(ray.wall);
 		while (i < col_width)
 		{
 			j = 0;
 			while (j < line_height)
 			{
-				// if (!pixel_exists(&(cub->frame), start_x - i, start_y + j))
+				color = get_wall_color(cub, d, ((float)j / (float)line_height));
 				pixel_put(&(cub->frame), start_x - i, start_y + j, color);
 				j++;
 			}
 			i++;
 		}
-		// while (i < line_height)
-		// {
-		// 	j = 0;
-		// 	while (j < col_width)
-		// 	{
-		// 		if (!pixel_exists(&(cub->frame), start_x - j, start_y + i))
-		// 			pixel_put(&(cub->frame), start_x - j, start_y + i, color);
-		// 		j++;
-		// 	}
-		// 	i++;
-		// }
 		d--;
 	}
-	// may/min distance
 }
-
 void	draw_ceil_floor(t_cub *cub)
 {
 	int	x;
 	int	y;
-	int	ceiling;
-	int	floor;
 
 	x = 0;
-	ceiling = cub->assets.ceiling;
-	floor = cub->assets.floor;
-	// ceiling = 0xFFFFFF;
-	// floor = 0x666666;
-	// printf("Ceiling: %d, Floor: %d\n", ceiling, floor);
 	y = 0;
 	while (y < (WIN_HEIGHT / 2))
 	{
 		x = 0;
 		while (x < WIN_WIDTH)
 		{
-			// if (!pixel_exists(&(cub->frame), x, y))
-			pixel_put(&(cub->frame), x, y, ceiling);
+			pixel_put(&(cub->frame), x, y, cub->assets.ceiling);
 			x++;
 		}
 		y++;
@@ -400,8 +442,7 @@ void	draw_ceil_floor(t_cub *cub)
 		x = 0;
 		while (x < WIN_WIDTH)
 		{
-			// if (!pixel_exists(&(cub->frame), x, y))
-			pixel_put(&(cub->frame), x, y, floor);
+			pixel_put(&(cub->frame), x, y, cub->assets.floor);
 			x++;
 		}
 		y++;
@@ -423,7 +464,15 @@ int	render(t_cub *cub)
 	// Draw Columns
 	draw_columns(cub);
 	// Draw Minimap
-	draw_minimap(cub);
+	if (cub->show_minimap)
+	{
+		draw_minimap(cub);
+		draw_player(&cub->frame, cub->player, cub->map.map_range, 0x000000);
+		draw_view_line(&cub->player, 0xFF0000, cub->map.map_range, &cub->frame);
+		if (cub->map.height <= (cub->map.map_range)
+			&& cub->map.width <= (cub->map.map_range))
+			draw_fov(cub);
+	}
 	mlx_put_image_to_window(cub->mlx, cub->win, cub->frame.img, 0, 0);
 	return (0);
 }

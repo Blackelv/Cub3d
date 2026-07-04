@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 02:24:54 by kel               #+#    #+#             */
-/*   Updated: 2026/06/27 17:26:57 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 16:19:00 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,9 @@ int	init_player_spawn(t_cub *cub)
 		return (E_INVAL_MAP);
 	cub->player.x = cub->map.spawn_x + 0.5;
 	cub->player.y = cub->map.spawn_y + 0.5;
+	cub->map.map_range = MAP_RANGE;
 	code = set_spawn_directions(cub);
 	if (code != OK)
 		return (code);
-	// cub->player.plane_x = -cub->player.dir_y * 0.66;
-	// cub->player.plane_y = cub->player.dir_x * 0.66;
 	return (OK);
 }
