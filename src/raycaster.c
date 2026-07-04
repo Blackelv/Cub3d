@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/01 07:49:02 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/02 08:41:45 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 11:08:08 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ int	generate_raycast(t_cub *cub)
 	t_xy_double	h;
 	int			DOF;
 	t_raycast	*rays;
-	float		wall_val;
+	double		wall_val;
 	float		angle;
+	float		wall_val_prev;
 
 	// t_xy_double	h;
 	// t_xy_point	r_point;
@@ -167,8 +168,19 @@ int	generate_raycast(t_cub *cub)
 		}
 		// identify wall orientation:
 		wall_val = fabs(1.0 - fabs(rays[d].x - (float)(int)rays[d].x));
-		if (wall_val >= 0.9999 || wall_val < 0.0001) // vertical
+		// next wall is closest
+		if (d == 0 || (d != FOV && (fabs(rays[d].dist - rays[d
+						- 1].dist) > fabs(rays[d].dist - rays[d + 1].dist))))
+			wall_val_prev = fabs(1.0 - fabs(rays[d + 1].x - (float)(int)rays[d
+						+ 1].x));
+		else // previous wall is closest
+			wall_val_prev = fabs(1.0 - fabs(rays[d - 1].x - (float)(int)rays[d
+						- 1].x));
+		// default first ray value
+		if ((wall_val >= 0.99999 || wall_val < 0.001)
+			&& (wall_val_prev >= 0.99999 || wall_val_prev < 0.001))
 		{
+			// vertical
 			if ((rays[d].ra) > (PI / 2) && rays[d].ra < (3 * PI / 2))
 			{
 				rays[d].wall = 'W';

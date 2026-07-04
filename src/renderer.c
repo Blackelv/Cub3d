@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/02 08:38:19 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 11:14:31 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	pixel_put(t_img *frame, int x, int y, int color)
 		offset = ((y * frame->line_len) + (x * (frame->bpp / 8)));
 		dst = frame->addr + offset; // pixel location
 		*(unsigned int *)dst = color;
+		// dst = frame->addr + (y * frame->line_len + x * (frame->bpp / 8));
+		// *(unsigned int *)dst = color;
 	}
 }
 
@@ -189,11 +191,11 @@ int	get_wall_color(char wall)
 	if (wall == 'N')
 		color = 0xEF476F; // red
 	else if (wall == 'E')
-		color = 0x8338EC; // yellow
+		color = 0x8338EC; // Blue
 	else if (wall == 'S')
-		color = 0x06D6A0; // greeen
+		color = 0x06D6A0; // green
 	else if (wall == 'W')
-		color = 0x04151F; // blue
+		color = 0xC4851F; // green
 	else
 		color = 0xFFFFFF; // white
 	return (color);
@@ -417,7 +419,7 @@ int	render(t_cub *cub)
 			&cub->frame.line_len, &cub->frame.endian);
 	generate_raycast(cub);
 	// Draw Ceiling/Floor
-	// draw_ceil_floor(cub);
+	draw_ceil_floor(cub);
 	// Draw Columns
 	draw_columns(cub);
 	// Draw Minimap

@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/02 07:45:00 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 10:29:54 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 # define SPAWN_CHARS "NSEW"
 # define WIN_WIDTH 1200
 # define WIN_HEIGHT 900
-# define FOV 60
+# define FOV 600
 # define BLOCK 64
 # define SPEED 1
 # define ROT 0.05
 # define MINI_SCALE 20
 # define MAP_RANGE 500
-# define DEG_1 0.01745
+# define DEG_1 0.001745
 // # define DOF 40
 
 # define PI 3.1415926535
