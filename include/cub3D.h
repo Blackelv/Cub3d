@@ -6,14 +6,14 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/04 16:19:57 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 23:06:48 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "/usr/include/X11/X.h" //needed to compile on my machine -ff
+# include "/usr/include/X11/X.h" //@KELVIN needed to compile on my machine -ff
 # include "libft.h"
 # include "mlx.h"
 # include <fcntl.h>
@@ -30,10 +30,18 @@
 # define SPEED 2
 # define ROT 0.05
 # define MINI_SCALE 20
-# define MAP_RANGE 10
+# define MAP_RANGE 30
 # define DEG_1 0.001745
 
 # define PI 3.1415926535
+
+// Colors
+# define PLAYER_COLOR 0x000000
+# define VIEW_COLOR 0xFF0000
+# define BLOCK_COLOR 0xD8E2DC
+# define NO_BLOCK_COLOR 0xFCA311
+# define FALLBACK_COLOR 0xFFFFFF
+# define FOV_COLOR 0xFF11FF
 
 # define ERR_ARGS "Invalid number of args"
 # define ERR_PARSE "Failed parsing args"
@@ -151,18 +159,18 @@ typedef struct s_map
 {
 	char		**grid;
 	char		**raw;
-	int r_count; // parse
-	int r_cap;   // parse
+	int			r_count;
+	int			r_cap;
 	int			width;
 	int			height;
 	int			spawn_x;
 	int			spawn_y;
-	int spawn_count; // parse
+	int			spawn_count;
 	char		spawn_dir;
-	bool parsed;    // parse
-	bool has_space; // parse
-	bool is_closed; // parse
-	int map_range;  // view window of minimap
+	bool		parsed;
+	bool		has_space;
+	bool		is_closed;
+	int			map_range;
 }				t_map;
 
 typedef struct s_collision
@@ -221,11 +229,11 @@ typedef struct xy_double
 
 typedef struct raycast
 {
-	float ra; // ray angle
-	float x;  // intersection point (r.x & r.y)
+	float		ra;
+	float		x;
 	float		y;
 	float		dist;
-	int wall; // N / E / S / W
+	int			wall;
 }				t_raycast;
 
 typedef struct s_cub
@@ -237,7 +245,7 @@ typedef struct s_cub
 	t_player	player;
 	t_img		frame;
 	t_assets	assets;
-	t_raycast	raycaster[FOV];
+	t_raycast	rays[FOV];
 	bool		update;
 }				t_cub;
 
@@ -271,11 +279,39 @@ int				x_press(t_cub **cub);
 int				key_release(int keycode, t_cub **cub);
 int				key_press(int keycode, t_cub **cub);
 
+//------------------------------RAYCAST FUNCTIONS-------------------------------/
+void			generate_raycast(t_cub *cub);
+
+//---------------------------Raycast Helpers------------------------------------/
+int	get_dof(t_cub *cub);
+void	setup_gridcheck(t_xy_double *off, t_xy_point *dof, t_cub *cub);
+t_xy_double	look_left_right(t_cub *cub, t_xy_point *dof, t_xy_double *off,
+	int d);
+t_xy_double	look_up_down(t_cub *cub, t_xy_point *dof, t_xy_double *off, int d);
+
 //------------------------------RENDER FUNCTIONS-------------------------------/
 int				render(t_cub *cub);
+void	draw_ceil_floor(t_cub *cub);
+void	draw_columns(t_cub *cub);
+void	draw_minimap(t_cub *cub);
+void	draw_player(t_img *frame, t_player player, int range, int color);
+void	draw_fov(t_cub *cub);
+void	draw_view_line(t_player *player, int color, int range, t_img *frame);
+void	draw_line(t_xy_point p1, t_xy_point p2, int color, t_img *frame);
+void	put_columns(t_cub *cub, int line_height, struct xy_point start, int d);
+void	put_minimap(t_cub *cub, int x_orig, int y_orig, int range);
+void	block_put(t_img *frame, int x, int y, int color);
+
+//-----------------------------Render helpers----------------------------------/
+int	get_wall_color(t_cub *cub, int d, float h_percent);
+int	get_color_from_texture(t_img texture, int x, int y);
+void	init_steps(t_xy_point *dest, t_xy_point *step, t_xy_point *p1,
+		t_xy_point *p2);
+void	pixel_put(t_img *frame, int x, int y, int color);
+int	valid_pixel(int x, int y);
+
 void			mini_map_resize(t_cub *cub, char inc);
 void			mini_map_toggle(t_cub *cub);
-int				generate_raycast(t_cub *cub);
 
 //-----------------NAV FUNCTIONS-----------------------------------------------/
 void			move_player(t_cub **cub, char dir);

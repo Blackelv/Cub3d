@@ -1,11 +1,3 @@
-// L / R arrows look left and right
-
-// WASD key move player relative to view orientation
-
-// ESC quits program cleanly
-
-//[X] must close window and program cleanly
-
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -14,9 +6,15 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 12:22:22 by ffrattar          #+#    #+#             */
-/*   Updated: 2025/03/06 18:15:27 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/04 22:22:08 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// L / R arrows look left and right
+// WASD key move player relative to view orientation
+// ESC & [X] quits program cleanly
+// [SPACEBAR] toggles minimap
+// [+]/[-] keys grow and shrink minimap (FOV visible on max size)
 
 #include "cub3D.h"
 
@@ -30,56 +28,30 @@ int	x_press(t_cub **cub)
 
 int	key_release(int keycode, t_cub **cub)
 {
-	if (keycode == 0xff1b) // esc
+	if (keycode == 0xff1b)
 		x_press(cub);
-	// if (keycode == 0x7a)
-	// {
-	// 	if ((cub)->map->z_s < 1.1)
-	// 		(cub)->map->z_s += 0.1;
-	// 	mlx_clear_window((cub)->mlx, (cub)->win);
-	// }
-	// if (keycode == 0x78)
-	// {
-	// 	if ((cub)->map->z_s > 0.1)
-	// 		(cub)->map->z_s -= 0.1;
-	// 	mlx_clear_window((cub)->mlx, (cub)->win);
-	// }
 	return (0);
 }
 
-//
-// W - 0x77
-// A - 0x61
-// S - 0x73
-// D - 0x64
-
 int	key_press(int keycode, t_cub **cub)
 {
-	// printf("Key Code: %d!\n", keycode);
-	// increment = 1.0 / MINI_SCALE;
-	// printf("Imcrement %f ", increment);
-	if (keycode == 119) // W
+	if (keycode == 119)
 		move_player(cub, 'F');
-	if (keycode == 115) // S
+	if (keycode == 115)
 		move_player(cub, 'B');
-	if (keycode == 97) // A
+	if (keycode == 97)
 		move_player(cub, 'L');
-	if (keycode == 100) // D
+	if (keycode == 100)
 		move_player(cub, 'R');
-	if (keycode == 0xff51) // Right
+	if (keycode == 0xff51)
 		rotate_player(cub, 'L');
-	if (keycode == 0xff53) // Left
+	if (keycode == 0xff53)
 		rotate_player(cub, 'R');
 	if (keycode == 0xff52)
 		mini_map_resize(*cub, '+');
 	if (keycode == 0xff54)
 		mini_map_resize(*cub, '-');
 	if (keycode == 0x20)
-	{
-		printf("range: %d\n", (*cub)->map.map_range);
 		mini_map_toggle(*cub);
-	}
-	// mlx_clear_window((*cub)->mlx, (*cub)->win);
-	// (*cub)->update = true;
 	return (0);
 }
