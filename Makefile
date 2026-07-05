@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kel <kel@student.42.fr>                    +#+  +:+       +#+         #
+#    By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/26 10:52:26 by ffrattar          #+#    #+#              #
-#    Updated: 2026/03/24 13:09:53 by kel              ###   ########.fr        #
+#    Updated: 2026/07/05 14:16:46 by ffrattar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,23 +30,28 @@ NAME := cub3D
 # Source Files (for archive file and main program)
 SRC_DIR = src
 
-SRCS = src/main.c src/parsing.c src/validate_config.c src/scene_parse.c \
-	src/scene_parse2.c src/map_parse.c src/map_parse2.c src/build_map.c \
-	src/validate_map.c src/validate_map2.c src/map_floodfill.c \
-	src/floodfill_helper.c src/cleaner.c src/cleaner2.c src/errors.c \
-	src/errors2.c src/init_mlx.c src/player_spawn.c \
+SRCS = src/main.c src/parsing/parsing.c src/parsing/validate_config.c src/parsing/scene_parse.c \
+	src/parsing/scene_parse2.c src/parsing/map_parse.c src/parsing/map_parse2.c src/parsing/build_map.c \
+	src/parsing/validate_map.c src/parsing/validate_map2.c src/parsing/map_floodfill.c \
+	src/parsing/floodfill_helper.c src/helpers/cleaner.c src/helpers/cleaner2.c src/helpers/errors.c \
+	src/helpers/errors2.c src/helpers/init_mlx.c src/gameplay/player_spawn.c src/gameplay/hooks.c \
+	src/gameplay/nav.c src/rendering/renderer.c src/rendering/render_helpers.c src/rendering/mini_map.c \
+	src/rendering/raycaster.c src/rendering/raycaster_2.c src/rendering/draw.c src/rendering/draw_helpers.c \
+	src/gameplay/nav_helpers.c src/debugREMOVE/fps_test.c
 
 OFILES = $(SRCS:.c=.o)
 
 # Dependency path info
 LIBFT_PATH := ./libft
 MLX_PATH := ./minilibx-linux
+#MLX_PATH := ./minilibx
 LIBFT := $(LIBFT_PATH)/libft.a
 LIBMLX := $(MLX_PATH)/libmlx_Linux.a
 DOT_H_PATH := include/cub3D.h
 INC = -I./include
 LIBINC = -I./libft/includes
 MLXINC = -I./minilibx-linux
+#MLXINC = -I./minilibx
 
 # Compilation Config
 CC = cc
@@ -58,7 +63,7 @@ MLX = -Lminilibx-linux $(LIBMLX) -lmlx -L/usr/lib -Imlx_linux -lXext -lX11 -lm -
 MLX_URL := https://github.com/42Paris/minilibx-linux.git
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(DEBUGFLAGS)  $< -o $@ 
+	$(CC) -c $(CFLAGS) $(DEBUGFLAGS)  $< -o $@
 
 # Build Target
 all: $(NAME)
@@ -66,7 +71,7 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(LIBMLX) $(DOT_H_PATH) $(OFILES)
 
 # Build main program file using library
-	$(CC) $(CFLAGS) $(OFILES) $(LIBFT) $(MLX) -o $(NAME) 
+	$(CC) $(CFLAGS) $(OFILES) $(LIBFT) $(MLX) -o $(NAME)
 	echo "${GREEN}Created $(NAME) program ${RESET_COLOR}"
 
 # Building_Libft_library

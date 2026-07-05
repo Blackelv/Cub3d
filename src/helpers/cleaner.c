@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/06 16:27:47 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 03:28:42 by kel              ###   ########.fr       */
+/*   Updated: 2026/05/17 11:10:52 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
 
-static	void	clean_texture_paths(t_cub *cub)
+static void	clean_texture_paths(t_cub *cub)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ static	void	clean_texture_paths(t_cub *cub)
 	}
 }
 
-static	void	clean_texture_images(t_cub *cub)
+static void	clean_texture_images(t_cub *cub)
 {
 	int	i;
 
@@ -46,7 +46,7 @@ static	void	clean_texture_images(t_cub *cub)
 	}
 }
 
-static	void	clean_map_raw(t_cub *cub)
+static void	clean_map_raw(t_cub *cub)
 {
 	int	i;
 
@@ -66,7 +66,7 @@ static	void	clean_map_raw(t_cub *cub)
 	cub->map.raw = NULL;
 }
 
-static	void	clean_map_grid(t_cub *cub)
+static void	clean_map_grid(t_cub *cub)
 {
 	int	i;
 

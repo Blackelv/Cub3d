@@ -3,26 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 13:26:38 by kel              ###   ########.fr       */
+/*   Updated: 2026/07/05 14:16:01 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
+# include "/usr/include/X11/X.h" //@KELVIN needed to compile on my machine -ff
 # include "libft.h"
 # include "mlx.h"
-# include <stdbool.h>
 # include <fcntl.h>
+# include <math.h>
+# include <stdbool.h>
 # include <unistd.h>
 
 # define MAP_CHARS "01NSEW "
 # define SPAWN_CHARS "NSEW"
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 1200
+# define WIN_HEIGHT 900
+# define FOV 600
+# define BLOCK 64
+# define SPEED 2
+# define ROT 0.05
+# define MINI_SCALE 20
+# define MAP_RANGE 30
+# define DEG_1 0.001745
+
+# define PI 3.1415926535
+
+// Colors
+# define PLAYER_COLOR 0x000000
+# define VIEW_COLOR 0xFF0000
+# define BLOCK_COLOR 0xD8E2DC
+# define NO_BLOCK_COLOR 0xFCA311
+# define FALLBACK_COLOR 0xFFFFFF
+# define FOV_COLOR 0xFF11FF
 
 # define ERR_ARGS "Invalid number of args"
 # define ERR_PARSE "Failed parsing args"
@@ -49,7 +68,7 @@
 # define ERR_WE_TEX "Missing West texture"
 # define ERR_EA_TEX "Missing East texture"
 # define ERR_RGB_R "RGB value out of range (0 - 255)"
-# define ERR_RGB_F "Invalid RGB format (3 sets of digits separated by ',')" 
+# define ERR_RGB_F "Invalid RGB format (3 sets of digits separated by ',')"
 # define ERR_RGB_M "Missing RGB value"
 # define ERR_INVAL_C "Invalid character in map"
 # define ERR_MULTI_SPAWN "Multiple spawn positions in map"
@@ -65,7 +84,7 @@
 # define GENERIC_ERR "Generic error"
 // # define ERR_FILE_IS_DIR "Is a directory"
 
-enum e_errors
+enum			e_errors
 {
 	OK = 0,
 	KO = 1,
@@ -107,7 +126,7 @@ enum e_errors
 	E_TEX_ADDR
 };
 
-enum e_scenestate
+enum			e_scenestate
 {
 	PRE_MAP,
 	IN_MAP,
@@ -122,112 +141,198 @@ typedef enum e_textid
 	EAST,
 	T_COUNT,
 	NONE = -1
-}	t_textid;
+}				t_textid;
 
 typedef struct s_flood
 {
-	char	**grid;
-	char	**vis;
-	int		*stack;
-	int		top;
-	int		h;
-	int		w;
-	int		i;
-	int		j;
-}	t_flood;
+	char		**grid;
+	char		**vis;
+	int			*stack;
+	int			top;
+	int			h;
+	int			w;
+	int			i;
+	int			j;
+}				t_flood;
 
 typedef struct s_map
 {
-	char	**grid;
-	char	**raw;
-	int		r_count;
-	int		r_cap;
-	int		width;
-	int		height;
-	int		spawn_x;
-	int		spawn_y;
-	int		spawn_count;
-	char	spawn_dir;
-	bool	parsed;
-	bool	has_space;
-	bool	is_closed;
-}	t_map;
+	char		**grid;
+	char		**raw;
+	int			r_count;
+	int			r_cap;
+	int			width;
+	int			height;
+	int			spawn_x;
+	int			spawn_y;
+	int			spawn_count;
+	char		spawn_dir;
+	bool		parsed;
+	bool		has_space;
+	bool		is_closed;
+	int			map_range;
+}				t_map;
+
+typedef struct s_collision
+{
+	bool		N;
+	bool		S;
+	bool		E;
+	bool		W;
+
+}				t_collision;
 
 typedef struct s_player
 {
-	double	x;
-	double	y;
-	double	dir_x;
-	double	dir_y;
-	double	plane_x;
-	double	plane_y;
-}	t_player;
+	double		x;
+	double		y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
+	double		angle;
+	t_collision	collision;
+}				t_player;
 
 typedef struct s_img
 {
-	void	*img;
-	char	*addr;
-	int		w;
-	int		h;
-	int		bpp;
-	int		endian;
-	int		line_len;
-}	t_img;
+	void		*img;
+	char		*addr;
+	int			w;
+	int			h;
+	int			bpp;
+	int			endian;
+	int			line_len;
+}				t_img;
 
 typedef struct s_assets
 {
-	t_img	img[T_COUNT];
-	char	*path[T_COUNT];
-	int		floor;
-	int		ceiling;
-	bool	f_set;
-	bool	c_set;
-}	t_assets;
+	t_img		img[T_COUNT];
+	char		*path[T_COUNT];
+	int			floor;
+	int			ceiling;
+	bool		f_set;
+	bool		c_set;
+}				t_assets;
+
+typedef struct xy_point
+{
+	int			x;
+	int			y;
+}				t_xy_point;
+
+typedef struct xy_double
+{
+	double		x;
+	double		y;
+}				t_xy_double;
+
+typedef struct raycast
+{
+	float		ra;
+	float		x;
+	float		y;
+	float		dist;
+	int			wall;
+}				t_raycast;
 
 typedef struct s_cub
 {
 	void		*mlx;
 	void		*win;
+	bool		show_minimap;
 	t_map		map;
 	t_player	player;
 	t_img		frame;
 	t_assets	assets;
-}	t_cub;
+	t_raycast	rays[FOV];
+	bool		update;
+}				t_cub;
 
 //--------------------------------Main FUNCTIONS-------------------------------/
 
 //------------------------------Parsing FUNCTIONS------------------------------/
-int			parse_n_init_map(t_cub *cub, char *file);
-int			valid_scene(t_cub *cub, char *file);
-t_textid	match_type_identifier(char *s);
-bool		is_line_empty(char *line);
-bool		is_scene_description(char *line);
-bool		is_map_content(char *line);
-int			fill_scenery(t_cub *cub, char *line);
-int			store_map_line(t_cub *cub, const char *line);
-int			parse_rgb(const char *s, int *r, int *g, int *b);
-int			check_config_complete(t_cub *cub);
-int			build_map_grid(t_cub *cub);
-int			scan_validate_map(t_cub *cub);
-int			init_player_spawn(t_cub *cub);
-int			init_mlx(t_cub *cub);
-int			check_borders(t_cub *cub);
-char		**visited_arr(int h, int w);
-void		free_visited_arr(char **vis, int n);
-int			flood_borders(t_cub *cub, char **vis);
-int			floodfill_void(t_cub *cub, int r, int c, char **vis);
+int				parse_n_init_map(t_cub *cub, char *file);
+int				valid_scene(t_cub *cub, char *file);
+t_textid		match_type_identifier(char *s);
+bool			is_line_empty(char *line);
+bool			is_scene_description(char *line);
+bool			is_map_content(char *line);
+int				fill_scenery(t_cub *cub, char *line);
+int				store_map_line(t_cub *cub, const char *line);
+int				parse_rgb(const char *s, int *r, int *g, int *b);
+int				check_config_complete(t_cub *cub);
+int				build_map_grid(t_cub *cub);
+int				scan_validate_map(t_cub *cub);
+int				init_player_spawn(t_cub *cub);
+int				init_mlx(t_cub *cub);
+int				check_borders(t_cub *cub);
+char			**visited_arr(int h, int w);
+void			free_visited_arr(char **vis, int n);
+int				flood_borders(t_cub *cub, char **vis);
+int				floodfill_void(t_cub *cub, int r, int c, char **vis);
 
 //---------------------------------MLX FUNCTIONS-------------------------------/
-int			init_mlx(t_cub *cub);
+int				init_mlx(t_cub *cub);
+
+int				x_press(t_cub **cub);
+int				key_release(int keycode, t_cub **cub);
+int				key_press(int keycode, t_cub **cub);
+
+//------------------------------RAYCAST FUNCTIONS-------------------------------/
+void			generate_raycast(t_cub *cub);
+
+//---------------------------Raycast Helpers------------------------------------/
+int	get_dof(t_cub *cub);
+void	setup_gridcheck(t_xy_double *off, t_xy_point *dof, t_cub *cub);
+t_xy_double	look_left_right(t_cub *cub, t_xy_point *dof, t_xy_double *off,
+	int d);
+t_xy_double	look_up_down(t_cub *cub, t_xy_point *dof, t_xy_double *off, int d);
+
+//------------------------------RENDER FUNCTIONS-------------------------------/
+int				render(t_cub *cub);
+void	draw_ceil_floor(t_cub *cub);
+void	draw_columns(t_cub *cub);
+void	draw_minimap(t_cub *cub);
+void	draw_player(t_img *frame, t_player player, int range, int color);
+void	draw_fov(t_cub *cub);
+void	draw_view_line(t_player *player, int color, int range, t_img *frame);
+void	draw_line(t_xy_point p1, t_xy_point p2, int color, t_img *frame);
+void	put_columns(t_cub *cub, int line_height, struct xy_point start, int d);
+void	put_minimap(t_cub *cub, int x_orig, int y_orig, int range);
+void	block_put(t_img *frame, int x, int y, int color);
+
+//-----------------------------Render helpers----------------------------------/
+int	get_wall_color(t_cub *cub, int d, float h_percent);
+int	get_color_from_texture(t_img texture, int x, int y);
+void	init_steps(t_xy_point *dest, t_xy_point *step, t_xy_point *p1,
+		t_xy_point *p2);
+void	pixel_put(t_img *frame, int x, int y, int color);
+int	valid_pixel(int x, int y);
+
+void			mini_map_resize(t_cub *cub, char inc);
+void			mini_map_toggle(t_cub *cub);
+
+//-----------------NAV FUNCTIONS-----------------------------------------------/
+void			move_player(t_cub **cub, char dir);
+void			rotate_player(t_cub **cub, char dir);
+int				unit(double dir, double step, int flip);
+
 
 //-------------------------------Cleaner FUNCTIONS-----------------------------/
-void		simple_error_exit(const char *msg);
-void		clean_cub3d(t_cub *cub);
-void		clean_mlx_ptrs(t_cub *cub);
+void			simple_error_exit(const char *msg);
+void			clean_cub3d(t_cub *cub);
+void			clean_mlx_ptrs(t_cub *cub);
 
 //-------------------------------Errors FUNCTIONS------------------------------/
-const	char	*err_mapper(int code);
-int			err_msg(const char *details, int code);
-const	char	*parsing_errors(int code);
+const char		*err_mapper(int code);
+int				err_msg(const char *details, int code);
+const char		*parsing_errors(int code);
+
+//--------------------Testing--------------------/
+# include <sys/time.h>
+
+void			fps_check(void);
+void			fps_check_constant(void);
 
 #endif

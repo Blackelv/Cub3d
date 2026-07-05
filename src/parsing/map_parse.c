@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_parse.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 14:32:03 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 01:44:43 by kel              ###   ########.fr       */
+/*   Updated: 2026/07/04 16:02:54 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	fill_scenery(t_cub *cub, char *line)
 	return (E_SCENE_KO);
 }
 
-static	int	dynamic_resize_mem(t_cub *cub)
+static int	dynamic_resize_mem(t_cub *cub)
 {
 	char	**new_r;
 	int		new_cap;
@@ -118,7 +118,7 @@ static	int	dynamic_resize_mem(t_cub *cub)
 		i++;
 	}
 	new_r[cub->map.r_count] = NULL;
-	free (cub->map.raw);
+	free(cub->map.raw);
 	cub->map.raw = new_r;
 	cub->map.r_cap = new_cap;
 	return (OK);
