@@ -6,23 +6,11 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/04 23:13:32 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/05 14:15:36 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3D.h"
-
-int	unit(double dir, double step, int flip)
-{
-	double	offset;
-	double	buffer;
-	int		unit;
-
-	offset = 0.5;
-	buffer = (step + offset) * flip;
-	unit = (int)floor((dir + buffer));
-	return (unit);
-}
 
 int	collision_check(t_cub *cub, char dir, double step)
 {

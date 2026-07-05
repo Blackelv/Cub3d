@@ -99,8 +99,8 @@ void	id_wall_orientations(t_raycast *rays, int d)
 	struct xy_double	w;
 
 	w.x = fabs(1.0 - fabs(rays[d].x - (float)(int)rays[d].x));
-	if (d == 0 || (d < FOV && (fabs(rays[d].dist - rays[d - 1].dist) > fabs(\
-rays[d].dist - rays[d + 1].dist))))
+	if (d == 0 || (d < (FOV - 1) && (fabs(rays[d].dist - rays[d - 1].dist\
+) > fabs(rays[d].dist - rays[d + 1].dist))))
 		w.y = fabs(1.0 - fabs(rays[d + 1].x - (float)(int)rays[d + 1].x));
 	else
 		w.y = fabs(1.0 - fabs(rays[d - 1].x - (float)(int)rays[d - 1].x));

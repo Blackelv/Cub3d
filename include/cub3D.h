@@ -6,7 +6,7 @@
 /*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/04 23:06:48 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/05 14:16:01 by ffrattar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,6 +316,8 @@ void			mini_map_toggle(t_cub *cub);
 //-----------------NAV FUNCTIONS-----------------------------------------------/
 void			move_player(t_cub **cub, char dir);
 void			rotate_player(t_cub **cub, char dir);
+int				unit(double dir, double step, int flip);
+
 
 //-------------------------------Cleaner FUNCTIONS-----------------------------/
 void			simple_error_exit(const char *msg);
