@@ -6,7 +6,7 @@
 /*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:24:21 by kel               #+#    #+#             */
-/*   Updated: 2026/03/24 00:36:37 by kel              ###   ########.fr       */
+/*   Updated: 2026/07/06 15:18:57 by kel              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,19 +80,18 @@ int	map_is_closed(t_cub *cub)
 
 	if (cub->map.height <= 0 || cub->map.width <= 0)
 		return (E_INVAL_MAP);
-	if (check_borders(cub))
-		return (E_MAP_OPEN);
+	code = check_borders(cub);
+	if (code != OK)
+		return (code);
+	code = check_within_walls(cub);
+	if (code != OK)
+		return (code);
 	vis = visited_arr(cub->map.height, cub->map.width);
 	if (!vis)
 		return (E_ALLOC_KO);
 	code = flood_borders(cub, vis);
-	if (code != OK)
-	{
-		free_visited_arr(vis, cub->map.height);
-		return (code);
-	}
 	free_visited_arr(vis, cub->map.height);
-	return (OK);
+	return (code);
 }
 
 int	scan_validate_map(t_cub *cub)
