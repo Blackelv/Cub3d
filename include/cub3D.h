@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/05 14:16:01 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/06 14:38:14 by kel              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,6 +267,8 @@ int				scan_validate_map(t_cub *cub);
 int				init_player_spawn(t_cub *cub);
 int				init_mlx(t_cub *cub);
 int				check_borders(t_cub *cub);
+int				check_within_walls(t_cub *cub);
+bool			into_the_void(t_cub *cub, int row, int col);
 char			**visited_arr(int h, int w);
 void			free_visited_arr(char **vis, int n);
 int				flood_borders(t_cub *cub, char **vis);
