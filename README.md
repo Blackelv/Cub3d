@@ -15,6 +15,8 @@ The user should be able to navigate using the following commands:
 // [SPACEBAR] toggles minimap
 // [+]/[-] keys grow and shrink minimap (FOV visible on max size)
 
+***Note** Bonus features include a togglable mini-map and collisions. 
+
 ## Instructions
 
 The program is designed to to be run on a linux system with a clang compiler and X11 windows manager. The user must also use the [minilibx 42 rendering library](https://github.com/42paris/minilibx-linux) which should be included in the project makefile, but can also be downloaded from the linked source and included in the main project directory.
@@ -49,7 +51,9 @@ C 225,30,0
 11110111 1110101 101111010001
 11111111 1111111 111111111111
 ```
-<img width="572" height="313" alt="image" src="https://github.com/user-attachments/assets/1404c80e-2c23-41a8-b214-e4d9980fe312" />
+
+If you map is valid (1 = walls, 0 = floor, N/E/S/W reflects player spawn point, all floor must be enclosed by walls), then you should see something like this:
+<img width="1199" height="744" alt="image" src="https://github.com/user-attachments/assets/ead04144-b322-405f-9e1c-88b64b2b26df" />
 ---
 
 # Resources
