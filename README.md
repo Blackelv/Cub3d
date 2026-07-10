@@ -1,4 +1,4 @@
-__This project has been created as part of the 42 curriculum by Kelemayi, Ffrattar__
+___This project has been created as part of the 42 curriculum by Kelemayi, Ffrattar___
 
 # Cub3D
 
