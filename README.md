@@ -52,10 +52,6 @@ C 225,30,0
 <img width="572" height="313" alt="image" src="https://github.com/user-attachments/assets/1404c80e-2c23-41a8-b214-e4d9980fe312" />
 ---
 
-## Instructions
-
-
-
 # Resources
 
 https://harm-smits.github.io/42docs/libs/minilibx
