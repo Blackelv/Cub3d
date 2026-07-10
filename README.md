@@ -3,25 +3,36 @@ ___This project has been created as part of the 42 curriculum by Kelemayi, Ffrat
 # Cub3D
 
 ## Description
-Cub3D is a programming project whose goal is the dynamic creation and navigation of a "realistic" 3D first-person maze "game" in C.The map of the game is provided by the user and validated by the Cub3D program, before being rendered using raytracing. It is developed using primarily user-created functions, with the exception of an imported MinilibX library and the standard C Math library. This project teaches file parsing and validation as well as raytracing and texture rendering concepts.
+Cub3D is a programming project whose goal is the dynamic creation and navigation of a "realistic" 3D first-person maze "game" in C.
+
+The map of the game is provided by the user and validated by the Cub3D program, before being rendered using raytracing. It is developed using primarily user-created functions, with the exception of an imported MinilibX library and the standard C Math library. This project teaches file parsing and validation as well as raytracing and texture rendering concepts.
 
 The Cub3D program must correctly parse a map scene passed to it as an initial argument and show the user a 3D scene that the user can then navigate.
 
 The user should be able to navigate using the following commands:
-
+```
 // L / R arrows look left and right
 // WASD key move player relative to view orientation
 // ESC & [X] quits program cleanly
 // [SPACEBAR] toggles minimap
 // [+]/[-] keys grow and shrink minimap (FOV visible on max size)
+```
 
-***Note** Bonus features include a togglable mini-map and collisions. 
+Note:  Bonus features include a togglable mini-map and collisions. 
 
 ## Instructions
 
+### Dependencies
+
+- Linux
+- X11 windows manager
+- Minilibx Library (external dependency imported upon make)
+
 The program is designed to to be run on a linux system with a clang compiler and X11 windows manager. The user must also use the [minilibx 42 rendering library](https://github.com/42paris/minilibx-linux) which should be included in the project makefile, but can also be downloaded from the linked source and included in the main project directory.
 
-Assuming you have all required dependencies, from the main project directory, to start the program for the first time run `make` and then you're good to go. See the following example usage.
+Assuming you have all required dependencies, from the main project directory, to start the program for the first time run `make` and then you're good to go. 
+
+See the following example usage.
 
 ### Example Usage
 
@@ -51,18 +62,31 @@ C 225,30,0
 11110111 1110101 101111010001
 11111111 1111111 111111111111
 ```
+**Valid Map requirements**:
+(1 = walls, 0 = floor, Single N/E/S/W reflects player spawn point and orientation, all floor must be enclosed by walls).
 
-If you map is valid (1 = walls, 0 = floor, N/E/S/W reflects player spawn point, all floor must be enclosed by walls), then you should see something like this:
+If you map is valid then you should see something like this:
+
 <img width="1199" height="744" alt="image" src="https://github.com/user-attachments/assets/ead04144-b322-405f-9e1c-88b64b2b26df" />
 ---
 
+From here, use the following controls to navigate the scene:
+
+```
+// L / R arrows look left and right
+// WASD key move player relative to view orientation
+// ESC & [X] quits program cleanly
+// [SPACEBAR] toggles minimap
+// [+]/[-] keys grow and shrink minimap (FOV visible on max size)
+```
+
 # Resources
 
+The concepts that required the most research were the math behind raytracing and the proper usage of the Minilibx library.
+
+### Minilibx
+
 https://harm-smits.github.io/42docs/libs/minilibx
-
-### Parsing
-
-Walkthrough cub3D parsing.pdf
 
 ## Raycasting Resources
 
