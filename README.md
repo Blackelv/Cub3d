@@ -107,9 +107,9 @@ https://en.wikipedia.org/wiki/Ray_casting
 
 [Wolfstein 3D Map Rendering Video](https://www.youtube.com/watch?v=eOCQfxRQ2pY&t=54s)
 
-[Raycasting in C from scratch](https://www.youtube.com/watch?v=2IEUa2gYJHQ)
+[Raycasting in C from scratch video](https://www.youtube.com/watch?v=2IEUa2gYJHQ)
 
-[Make your own raycaster tutorial}(https://www.youtube.com/watch?v=gYRrGTC7GtA)
+[Make your own raycaster tutorial video](https://www.youtube.com/watch?v=gYRrGTC7GtA)
 
 ### AI Usage
 
