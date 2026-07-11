@@ -17,7 +17,7 @@ The user should be able to navigate using the following commands:
 // WASD key move player relative to view orientation
 // ESC & [X] quits program cleanly
 // [SPACEBAR] toggles minimap
-// [+]/[-] keys grow and shrink minimap (FOV visible on max size)
+// Up / Down arrows keys grow and shrink minimap (FOV visible on max size)
 ```
 
 Note:  Bonus features include a togglable mini-map and wall collision detection. 
@@ -90,7 +90,7 @@ From here, use the following controls to navigate the scene:
 // WASD key move player relative to view orientation
 // ESC & [X] quits program cleanly
 // [SPACEBAR] toggles minimap
-// [+]/[-] keys grow and shrink minimap (FOV visible on max size)
+// Up / Down keys grow and shrink minimap (FOV visible on max size)
 ```
 
 # Resources
