@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   renderer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: kelemayi <kelemayi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 19:53:26 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/04 23:09:54 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/10 18:53:49 by kelemayi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ void	draw_ceil_floor(t_cub *cub)
 
 int	render(t_cub *cub)
 {
-	fps_check_constant(); //  remove when done testing @Kelvin
 	if (cub->frame.img)
 		mlx_destroy_image(cub->mlx, cub->frame.img);
 	cub->frame.img = mlx_new_image(cub->mlx, WIN_WIDTH, WIN_HEIGHT);

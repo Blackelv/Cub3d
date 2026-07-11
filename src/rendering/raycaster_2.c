@@ -40,13 +40,13 @@ t_xy_double	look_left_right(t_cub *cub, t_xy_point *dof, t_xy_double *off,
 	float		tan_a;
 
 	tan_a = -tan(cub->rays[d].ra);
-	if (cos(cub->rays[d].ra) > 0.001) // looking left
+	if (cos(cub->rays[d].ra) > 0.001)
 	{
 		r.x = ((int)cub->player.x + 1.0);
 		off->x = 1.0;
 		off->y = off->x * tan_a;
 	}
-	else if (cos(cub->rays[d].ra) < -0.001) // looking right
+	else if (cos(cub->rays[d].ra) < -0.001)
 	{
 		r.x = (int)cub->player.x - 0.0001;
 		off->x = -1.0;
@@ -70,13 +70,13 @@ t_xy_double	look_up_down(t_cub *cub, t_xy_point *dof, t_xy_double *off, int d)
 	tan_a = -1.0;
 	if (tan(cub->rays[d].ra))
 		tan_a = -1.0 / tan(cub->rays[d].ra);
-	if (sin(cub->rays[d].ra) > 0.001) // looking up
+	if (sin(cub->rays[d].ra) > 0.001)
 	{
 		r.y = (int)cub->player.y - 0.0001;
 		off->y = -1.0;
 		off->x = off->y * tan_a;
 	}
-	else if (sin(cub->rays[d].ra) < -0.001) // looking down
+	else if (sin(cub->rays[d].ra) < -0.001)
 	{
 		r.y = (int)cub->player.y + 1.0;
 		off->y = 1.0;

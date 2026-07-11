@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nav.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ffrattar <ffrattar@student.42firenze.it    +#+  +:+       +#+        */
+/*   By: kelemayi <kelemayi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/17 11:23:58 by ffrattar          #+#    #+#             */
-/*   Updated: 2026/07/05 14:15:36 by ffrattar         ###   ########.fr       */
+/*   Updated: 2026/07/10 20:03:35 by kelemayi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ void	update_collisions(t_cub *cub)
 	double	step;
 
 	step = ((SPEED * 1.0) / MINI_SCALE * 1.0);
-	cub->player.collision.N = collision_check(cub, 'N', step);
-	cub->player.collision.S = collision_check(cub, 'S', step);
-	cub->player.collision.E = collision_check(cub, 'E', step);
-	cub->player.collision.W = collision_check(cub, 'W', step);
+	cub->player.collision.n = collision_check(cub, 'N', step);
+	cub->player.collision.s = collision_check(cub, 'S', step);
+	cub->player.collision.e = collision_check(cub, 'E', step);
+	cub->player.collision.w = collision_check(cub, 'W', step);
 }
 
 struct xy_double	get_dx_dy(t_cub **cub, char dir)
@@ -86,13 +86,13 @@ void	move_player(t_cub **cub, char dir)
 	if (fabs(d.y) < 0.0001)
 		d.y = 0.0;
 	update_collisions(*cub);
-	if (d.y < 0 && !((*cub)->player.collision.N))
+	if (d.y < 0 && !((*cub)->player.collision.n))
 		(*cub)->player.y = (*cub)->player.y + step * d.y;
-	if (d.y > 0 && !((*cub)->player.collision.S))
+	if (d.y > 0 && !((*cub)->player.collision.s))
 		(*cub)->player.y = (*cub)->player.y + step * d.y;
-	if (d.x > 0 && !((*cub)->player.collision.E))
+	if (d.x > 0 && !((*cub)->player.collision.e))
 		(*cub)->player.x = (*cub)->player.x + step * d.x;
-	if (d.x < 0 && !((*cub)->player.collision.W))
+	if (d.x < 0 && !((*cub)->player.collision.w))
 		(*cub)->player.x = (*cub)->player.x + step * d.x;
 }
 

@@ -28,13 +28,12 @@ void	check_vertical_gridlines(t_xy_double *v, t_cub *cub, t_xy_double *dist,
 		if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
 			&& grid.y < cub->map.height && cub->map.grid[grid.y][grid.x] == '1')
 		{
-			dof.x = dof.y; // end loop
+			dof.x = dof.y;
 			dist->y = cos(cub->rays[d].ra) * (v->x - cub->player.x)
 				- sin(cub->rays[d].ra) * (v->y - cub->player.y);
 		}
 		else
 		{
-			// check next gridline
 			v->x += off.x;
 			v->y += off.y;
 			dof.x += 1;
@@ -58,7 +57,7 @@ void	check_horizontal_gridlines(t_xy_double *h, t_cub *cub,
 		if (grid.x >= 0 && grid.x < cub->map.width && grid.y >= 0
 			&& grid.y < cub->map.height && cub->map.grid[grid.y][grid.x] == '1')
 		{
-			dof.x = dof.y; // end loop
+			dof.x = dof.y;
 			dist->x = cos(cub->rays[d].ra) * (h->x - cub->player.x)
 				- sin(cub->rays[d].ra) * (h->y - cub->player.y);
 		}
@@ -80,7 +79,6 @@ void	id_shortest_raytrace(t_cub *cub, t_xy_double r[2],
 	rays = cub->rays;
 	if (dist.y < dist.x)
 	{
-		// identify orientation of line
 		rays[d].x = r[0].x;
 		rays[d].y = r[0].y;
 		rays[d].dist = dist.y;
@@ -99,14 +97,13 @@ void	id_wall_orientations(t_raycast *rays, int d)
 	struct xy_double	w;
 
 	w.x = fabs(1.0 - fabs(rays[d].x - (float)(int)rays[d].x));
-	if (d == 0 || (d < (FOV - 1) && (fabs(rays[d].dist - rays[d - 1].dist\
-) > fabs(rays[d].dist - rays[d + 1].dist))))
+	if (d == 0 || (d < (FOV - 1) && (fabs(rays[d].dist - rays[d - 1].dist)
+				> fabs(rays[d].dist - rays[d + 1].dist))))
 		w.y = fabs(1.0 - fabs(rays[d + 1].x - (float)(int)rays[d + 1].x));
 	else
 		w.y = fabs(1.0 - fabs(rays[d - 1].x - (float)(int)rays[d - 1].x));
 	if ((w.x >= 0.99999 || w.x < 0.001) && (w.y >= 0.99999 || w.y < 0.001))
 	{
-		// vertical
 		if ((rays[d].ra) > (PI / 2) && rays[d].ra < (3 * PI / 2))
 		{
 			rays[d].wall = 'W';
@@ -114,7 +111,7 @@ void	id_wall_orientations(t_raycast *rays, int d)
 		else
 			rays[d].wall = 'E';
 	}
-	else // horizontal
+	else
 	{
 		if (rays[d].ra > PI)
 			rays[d].wall = 'S';

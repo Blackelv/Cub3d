@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   cub3D.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kel <kel@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: kelemayi <kelemayi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 13:41:50 by kel               #+#    #+#             */
-/*   Updated: 2026/07/06 14:38:14 by kel              ###   ########.fr       */
+/*   Updated: 2026/07/10 20:03:35 by kelemayi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "/usr/include/X11/X.h" //@KELVIN needed to compile on my machine -ff
+# include "/usr/include/X11/X.h"
 # include "libft.h"
 # include "mlx.h"
 # include <fcntl.h>
@@ -175,10 +175,10 @@ typedef struct s_map
 
 typedef struct s_collision
 {
-	bool		N;
-	bool		S;
-	bool		E;
-	bool		W;
+	bool	n;
+	bool	s;
+	bool	e;
+	bool	w;
 
 }				t_collision;
 
@@ -281,36 +281,41 @@ int				x_press(t_cub **cub);
 int				key_release(int keycode, t_cub **cub);
 int				key_press(int keycode, t_cub **cub);
 
-//------------------------------RAYCAST FUNCTIONS-------------------------------/
+//------------------------------RAYCAST FUNCTIONS------------------------------/
 void			generate_raycast(t_cub *cub);
 
-//---------------------------Raycast Helpers------------------------------------/
-int	get_dof(t_cub *cub);
-void	setup_gridcheck(t_xy_double *off, t_xy_point *dof, t_cub *cub);
-t_xy_double	look_left_right(t_cub *cub, t_xy_point *dof, t_xy_double *off,
-	int d);
-t_xy_double	look_up_down(t_cub *cub, t_xy_point *dof, t_xy_double *off, int d);
+//---------------------------Raycast Helpers-----------------------------------/
+int				get_dof(t_cub *cub);
+void			setup_gridcheck(t_xy_double *off, t_xy_point *dof, t_cub *cub);
+t_xy_double		look_left_right(t_cub *cub, t_xy_point *dof, t_xy_double *off,
+					int d);
+t_xy_double		look_up_down(t_cub *cub, t_xy_point *dof, t_xy_double *off,
+					int d);
 
 //------------------------------RENDER FUNCTIONS-------------------------------/
 int				render(t_cub *cub);
-void	draw_ceil_floor(t_cub *cub);
-void	draw_columns(t_cub *cub);
-void	draw_minimap(t_cub *cub);
-void	draw_player(t_img *frame, t_player player, int range, int color);
-void	draw_fov(t_cub *cub);
-void	draw_view_line(t_player *player, int color, int range, t_img *frame);
-void	draw_line(t_xy_point p1, t_xy_point p2, int color, t_img *frame);
-void	put_columns(t_cub *cub, int line_height, struct xy_point start, int d);
-void	put_minimap(t_cub *cub, int x_orig, int y_orig, int range);
-void	block_put(t_img *frame, int x, int y, int color);
+void			draw_ceil_floor(t_cub *cub);
+void			draw_columns(t_cub *cub);
+void			draw_minimap(t_cub *cub);
+void			draw_player(t_img *frame, t_player player, int range,
+					int color);
+void			draw_fov(t_cub *cub);
+void			draw_view_line(t_player *player, int color, int range,
+					t_img *frame);
+void			draw_line(t_xy_point p1, t_xy_point p2, int color,
+					t_img *frame);
+void			put_columns(t_cub *cub, int line_height, struct xy_point start,
+					int d);
+void			put_minimap(t_cub *cub, int x_orig, int y_orig, int range);
+void			block_put(t_img *frame, int x, int y, int color);
 
 //-----------------------------Render helpers----------------------------------/
-int	get_wall_color(t_cub *cub, int d, float h_percent);
-int	get_color_from_texture(t_img texture, int x, int y);
-void	init_steps(t_xy_point *dest, t_xy_point *step, t_xy_point *p1,
-		t_xy_point *p2);
-void	pixel_put(t_img *frame, int x, int y, int color);
-int	valid_pixel(int x, int y);
+int				get_wall_color(t_cub *cub, int d, float h_percent);
+int				get_color_from_texture(t_img texture, int x, int y);
+void			init_steps(t_xy_point *dest, t_xy_point *step, t_xy_point *p1,
+					t_xy_point *p2);
+void			pixel_put(t_img *frame, int x, int y, int color);
+int				valid_pixel(int x, int y);
 
 void			mini_map_resize(t_cub *cub, char inc);
 void			mini_map_toggle(t_cub *cub);
@@ -319,7 +324,6 @@ void			mini_map_toggle(t_cub *cub);
 void			move_player(t_cub **cub, char dir);
 void			rotate_player(t_cub **cub, char dir);
 int				unit(double dir, double step, int flip);
-
 
 //-------------------------------Cleaner FUNCTIONS-----------------------------/
 void			simple_error_exit(const char *msg);
@@ -332,9 +336,9 @@ int				err_msg(const char *details, int code);
 const char		*parsing_errors(int code);
 
 //--------------------Testing--------------------/
-# include <sys/time.h>
+// # include <sys/time.h>
 
-void			fps_check(void);
-void			fps_check_constant(void);
+// void			fps_check(void);
+// void			fps_check_constant(void);
 
 #endif
