@@ -5,6 +5,8 @@ ___This project has been created as part of the 42 curriculum by Kelemayi, Ffrat
 ## Description
 Cub3D is a programming project whose goal is the dynamic creation and navigation of a "realistic" 3D first-person maze "game" written in C.
 
+The game mechanics themselves are entirely 2D, but raytraycing math is used to draw a 3D perspective view with  minimal computational overhead. This technique was employed in early first person shooter games such as Wolfenstein and DOOM. 
+
 The map of the game is provided by the user and validated by the Cub3D program, before being rendered using raytracing. It is developed using primarily user-created functions, with the exception of an imported MinilibX library and the standard C Math library. This project teaches file parsing and validation as well as raytracing and texture rendering concepts.
 
 The Cub3D program must correctly parse a map scene passed to it as an initial argument and show the user a 3D scene that the user can then navigate.
