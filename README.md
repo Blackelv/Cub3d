@@ -115,4 +115,4 @@ https://en.wikipedia.org/wiki/Ray_casting
 
 ### AI Usage
 
-AI was used for conceptual research purposes (ex. "how does raytracing work?" "what does this equation do?". No AI generated code was used in this project.
+AI was used for conceptual research purposes (ex. "how does raytracing work?" "what does this equation do?"). No AI generated code was used in this project.
